@@ -8,7 +8,7 @@ of transcripts into distinct bits.
 
 - Apple's built-in sound classifier already has laughter, applause and cheering classes — on-device laugh detection is free.
 - SFSpeechRecognizer can't do a 60-minute set; the first-party long-form API (SpeechAnalyzer) needs iOS 26; WhisperKit is the fallback.
-- Workers AI hosts Whisper with word timestamps at ~$0.03 per hour-long set — but max audio size is undocumented; ~1 MB chunking is mandatory.
+- Workers AI hosts Whisper with word timestamps at ~$0.03 per hour of audio; max input size is undocumented — chunking is mandatory.
 - Cloudflare Containers are GA but CPU-only — fine for the small OSS laughter detector; custom models can't run on Workers AI.
 - Published comedy pipelines (TIC-TALK, EMNLP 2021) already do exactly this: laughter peaks + embedding topic shifts as bit boundaries.
 - Cloudflare Stream rejects audio-only uploads — serve show audio as range requests straight from R2 (free egress).
