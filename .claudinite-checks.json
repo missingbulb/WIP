@@ -1,0 +1,77 @@
+{
+  "packs": [
+    "local/wip",
+    "basics",
+    "claudinite-lifecycle",
+    {
+      "id": "barriers",
+      "via": [
+        "claudinite-lifecycle"
+      ],
+      "answers": {
+        "goals": "None yet — leave unset. The repo has no code yet; revisit once the app codebase has real folder structure (e.g. app code vs. product-wiki vs. requirements)."
+      }
+    },
+    {
+      "id": "git-github",
+      "via": [
+        "basics"
+      ]
+    },
+    {
+      "id": "claude-code-web-users-support",
+      "answers": {
+        "store": "missingBulb/Shepherd"
+      },
+      "config": {
+        "repo": "missingBulb/Shepherd"
+      }
+    },
+    "claudinite-growth",
+    "tidy-repo",
+    {
+      "id": "executable-requirements",
+      "answers": {
+        "ui_testing": "Cross-platform (Flutter widget/golden tests) — the app targets iPad first with other platforms later, so UI requirements will be exercised via Flutter widget tests and golden-file rendering assertions once the platform choice is confirmed by tech research.",
+        "requirements_source": "Wait until after market/tech research — dev/requirements/requirements.md stays unseeded until the deferred research pass (audience, actions, market, technology) informs what to spec. This adoption run intentionally stops before that research."
+      },
+      "config": {
+        "spec": "dev/requirements/requirements.md"
+      }
+    },
+    "spec-driven-product",
+    {
+      "id": "product-wiki",
+      "answers": {
+        "product": "Claudinite (working name): an iPad app (other platforms later) for comedians to record, segment, manage, and review comedy bits — first use is working on new material, second use is tracking and managing existing material.",
+        "users": "Working/touring standup comedians; open-mic and hobbyist comedians.",
+        "market": "Comedy bit recording/management apps for standups — no competitors named yet; the deferred first research pass will identify them."
+      }
+    }
+  ],
+  "maintenance": {
+    "delivery": "auto-merge"
+  },
+  "taskScheduler": {
+    "dailyHour": 4,
+    "weeklyDay": "Sun",
+    "monthlyDay": 1
+  },
+  "claudinite": {
+    "updated": "2026-08-20T19:35:07.366Z",
+    "ref": "5c4103e12df164ac8efcdc9f84f6b961f150bbc6",
+    "engineVersion": "60820.1",
+    "packVersions": {
+      "basics": "60820.3",
+      "claudinite-lifecycle": "60820.1",
+      "barriers": "60820.1",
+      "git-github": "60820.1",
+      "claude-code-web-users-support": "60820.1",
+      "claudinite-growth": "60820.1",
+      "tidy-repo": "60820.1",
+      "executable-requirements": "60820.1",
+      "spec-driven-product": "60820.1",
+      "product-wiki": "60820.1"
+    }
+  }
+}
