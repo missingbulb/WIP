@@ -21,5 +21,5 @@ human reviews it into `product-requirements/`, the one crossing point.
 The human-reviewed distillation of the wikis above into product requirements.
 Never auto-grown — see [`product-requirements/README.md`](product-requirements/README.md).
 
-No growth pass has run yet — these wikis are seeded skeletons only. The first
-research pass is deferred to a later session.
+The first research pass ran 2026-08-20 (see each wiki's growth log); pages now
+carry cited findings and live open-question backlogs.
