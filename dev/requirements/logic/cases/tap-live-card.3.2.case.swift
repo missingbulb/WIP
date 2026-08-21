@@ -5,7 +5,7 @@ import SetlistCore
 /// segment. Mid-joke, a comedian's thumb finds its own card constantly.
 let tapLiveCard_3_2 = RequirementCase(id: "3.2") {
     let airport = Joke(title: "Airport security", body: "…")
-    var stage = StageModel(setList: SetList(name: "Fri late", jokes: [airport]), plannedLength: 1200)
+    var stage = StageModel(jokes: [airport], plannedLength: 1200)
 
     stage.tapCard(jokeID: airport.id, at: CaptureTime(0))
     let before = stage.segments

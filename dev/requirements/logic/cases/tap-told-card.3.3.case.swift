@@ -6,7 +6,7 @@ import SetlistCore
 let tapToldCard_3_3 = RequirementCase(id: "3.3") {
     let van = Joke(title: "Dad's van", body: "…")
     let airport = Joke(title: "Airport security", body: "…")
-    var stage = StageModel(setList: SetList(name: "Fri late", jokes: [van, airport]), plannedLength: 1200)
+    var stage = StageModel(jokes: [van, airport], plannedLength: 1200)
 
     stage.tapCard(jokeID: van.id, at: CaptureTime(0))
     stage.tapCard(jokeID: airport.id, at: CaptureTime(125))

@@ -5,7 +5,7 @@ import SetlistCore
 /// counting a re-opened joke once.
 let startedCount_3_5 = RequirementCase(id: "3.5") {
     let jokes = (1 ... 9).map { Joke(title: "Bit \($0)", body: "…") }
-    var stage = StageModel(setList: SetList(name: "Fri late", jokes: jokes), plannedLength: 1200)
+    var stage = StageModel(jokes: jokes, plannedLength: 1200)
 
     try expectEqual(stage.startedCount, 0, "nothing started yet")
     try expectEqual(stage.plannedCount, 9, "jokes planned")

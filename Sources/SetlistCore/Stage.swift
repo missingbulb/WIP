@@ -57,8 +57,10 @@ public struct StageModel {
     /// The slot, in seconds.
     public let plannedLength: TimeInterval
 
-    public init(setList: SetList, plannedLength: TimeInterval, autodetectAvailable: Bool = false) {
-        self.cards = setList.jokes.map { StageCard(joke: $0) }
+    /// Takes resolved jokes rather than a set: what goes on stage is the
+    /// material, and resolving a set's ids is the library's job.
+    public init(jokes: [Joke], plannedLength: TimeInterval, autodetectAvailable: Bool = false) {
+        self.cards = jokes.map { StageCard(joke: $0) }
         self.segments = []
         self.autodetectAvailable = autodetectAvailable
         self.segmentMode = .manual

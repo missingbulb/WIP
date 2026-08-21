@@ -5,7 +5,7 @@ import SetlistCore
 /// Phase B's proposed boundaries can never be mistaken for the comedian's own.
 let manualProvenance_3_6 = RequirementCase(id: "3.6") {
     let jokes = (1 ... 3).map { Joke(title: "Bit \($0)", body: "…") }
-    var stage = StageModel(setList: SetList(name: "Fri late", jokes: jokes), plannedLength: 1200)
+    var stage = StageModel(jokes: jokes, plannedLength: 1200)
 
     stage.tapCard(jokeID: jokes[0].id, at: CaptureTime(0))
     stage.tapCard(jokeID: jokes[1].id, at: CaptureTime(120))

@@ -57,29 +57,24 @@ public struct Joke: Identifiable, Codable, Equatable, Sendable {
 }
 
 /// An ordered list of jokes planned for a show. Named `SetList` because `Set`
-/// is the standard library's.
+/// is the standard library's. It holds ids rather than copies: a joke edited in
+/// the library is edited everywhere it is planned.
 public struct SetList: Identifiable, Codable, Equatable, Sendable {
     public var id: UUID
     public var name: String
     /// Jokes in performance order. Order is position only — never identity.
-    public var jokes: [Joke]
+    public var jokeIDs: [UUID]
 
-    public init(id: UUID = UUID(), name: String, jokes: [Joke] = []) {
+    public init(id: UUID = UUID(), name: String, jokeIDs: [UUID] = []) {
         self.id = id
         self.name = name
-        self.jokes = jokes
-    }
-
-    /// The planned length of the set: its jokes' estimates summed. A joke with
-    /// no estimate contributes nothing rather than a guess.
-    public var plannedLength: TimeInterval {
-        jokes.reduce(0) { $0 + ($1.estimatedLength ?? 0) }
+        self.jokeIDs = jokeIDs
     }
 
     public mutating func move(from source: Int, to destination: Int) {
-        guard jokes.indices.contains(source), jokes.indices.contains(destination) else { return }
-        let joke = jokes.remove(at: source)
-        jokes.insert(joke, at: destination)
+        guard jokeIDs.indices.contains(source), jokeIDs.indices.contains(destination) else { return }
+        let jokeID = jokeIDs.remove(at: source)
+        jokeIDs.insert(jokeID, at: destination)
     }
 }
 
@@ -137,5 +132,36 @@ public struct Show: Identifiable, Codable, Equatable, Sendable {
         self.plannedLength = plannedLength
         self.audience = audience
         self.setListID = setListID
+    }
+}
+
+/// Everything the comedian owns, and the one thing that resolves a set's ids
+/// back into jokes.
+public struct Library: Codable, Equatable, Sendable {
+    public var jokes: [Joke]
+    public var sets: [SetList]
+    public var shows: [Show]
+
+    public init(jokes: [Joke] = [], sets: [SetList] = [], shows: [Show] = []) {
+        self.jokes = jokes
+        self.sets = sets
+        self.shows = shows
+    }
+
+    public func joke(_ id: UUID) -> Joke? {
+        jokes.first(where: { $0.id == id })
+    }
+
+    /// The set's jokes, in order. An id with no joke behind it is dropped
+    /// rather than faked — a deleted joke leaves a shorter set, not a blank
+    /// card on stage.
+    public func jokes(of set: SetList) -> [Joke] {
+        set.jokeIDs.compactMap(joke)
+    }
+
+    /// The planned length of a set: its jokes' estimates summed. A joke with no
+    /// estimate contributes nothing rather than a guess.
+    public func plannedLength(of set: SetList) -> TimeInterval {
+        jokes(of: set).reduce(0) { $0 + ($1.estimatedLength ?? 0) }
     }
 }

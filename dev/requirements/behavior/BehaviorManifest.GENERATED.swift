@@ -3,5 +3,11 @@
 // executes; the gate fails when it and cases/ disagree.
 
 enum BehaviorManifest {
-    static let cases: [RequirementCase] = []
+    static let cases: [RequirementCase] = [
+        continuousRecording_4_1,
+        interruptionResumes_4_6,
+        librarySurvivesRelaunch_1_6,
+        recordingLocation_4_2,
+        tapOnCaptureClock_3_4,
+    ]
 }

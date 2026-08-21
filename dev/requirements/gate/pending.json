@@ -2,10 +2,6 @@
   "$comment": "Requirement leaves specified but not yet executable. A burn-down list tracked by https://github.com/missingbulb/WIP/issues/6 — it only shrinks. A leaf listed here must carry the loud TBD marker on its line in requirements.md, and must have no case; the coverage gate enforces both directions.",
   "leaves": [
     {
-      "id": "1.6",
-      "reason": "Needs the local store; claimed by a behavior case when the Library module ships persistence."
-    },
-    {
       "id": "2.1",
       "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
     },
@@ -50,23 +46,7 @@
       "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
     },
     {
-      "id": "3.4",
-      "reason": "Needs a real device or a faithful audio-session fake; neither exists yet. Claimed by a behavior case once Capture ships its fake session."
-    },
-    {
-      "id": "4.1",
-      "reason": "Needs a real device or a faithful audio-session fake; neither exists yet. Claimed by a behavior case once Capture ships its fake session."
-    },
-    {
-      "id": "4.2",
-      "reason": "Needs a real device or a faithful audio-session fake; neither exists yet. Claimed by a behavior case once Capture ships its fake session."
-    },
-    {
       "id": "4.5",
-      "reason": "Needs a real device or a faithful audio-session fake; neither exists yet. Claimed by a behavior case once Capture ships its fake session."
-    },
-    {
-      "id": "4.6",
       "reason": "Needs a real device or a faithful audio-session fake; neither exists yet. Claimed by a behavior case once Capture ships its fake session."
     },
     {
