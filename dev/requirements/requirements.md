@@ -49,12 +49,12 @@ performed at.
 The live screen, portrait, as drawn in mockup 1. Every leaf here is a resting
 state an owner checks by sight.
 
-- `2.1` ⚠ TBD The stage screen fills one portrait iPad screen at 3:4 with no scrolling region.
-- `2.2` ⚠ TBD The current joke occupies the top region, its body text the largest text on the screen.
-- `2.3` ⚠ TBD Crucial setups render highlighted inside the current joke's body.
-- `2.4` ⚠ TBD The current joke's optional text — alternate tags, callbacks, delivery notes — renders below the body as tags, callbacks distinguished from plain tags.
+- `2.1` The stage screen fills one portrait iPad screen at 3:4 with no scrolling region.
+- `2.2` The current joke occupies the top region, its body text the largest text on the screen.
+- `2.3` Crucial setups render highlighted inside the current joke's body.
+- `2.4` The current joke's optional text — alternate tags, callbacks, delivery notes — renders below the body as tags, callbacks distinguished from plain tags.
 - `2.5` The set list renders as a 3-column grid of nine cards, each card carrying its joke's title.
-- `2.6` ⚠ TBD Told, live and queued cards are each coloured differently, with a key naming the three states.
+- `2.6` Told, live and queued cards are each coloured differently, with a key naming the three states.
 - `2.7` No stage-mode card carries a laugh count or laugh score.
   <details><summary>Owner requirement, asserted as a rule not a picture</summary>
 
@@ -64,11 +64,20 @@ state an owner checks by sight.
   does not cover. The rule is asserted against the stage view model instead:
   no card field carries laugh data.
   </details>
-- `2.8` ⚠ TBD The countdown is subordinate to the joke text and shows remaining time, elapsed time and the set's planned length.
+- `2.8` The countdown is subordinate to the joke text and shows remaining time, elapsed time and the set's planned length.
 - `2.9` The countdown's colour is neutral while more than three minutes remain, orange at three minutes or less, red once remaining time reaches zero, after which it counts up as a negative.
-- `2.10` ⚠ TBD The pacing bar carries one segment per joke in set order, sized by estimated length, marked told, live or queued.
-- `2.11` ⚠ TBD A recording indicator is visible in the header whenever capture is running.
+- `2.10` The pacing bar carries one segment per joke in set order, sized by estimated length, marked told, live or queued.
+- `2.11` A recording indicator is visible in the header whenever capture is running.
 - `2.12` ⚠ TBD The segment-mode control is a standard iOS switch labelled "Manual switch" when off and "Autodetect bits" when on, with no explanatory text beside it.
+  <details><summary>Why a golden cannot see this one</summary>
+
+  The standard switch is UIKit-backed, and the renderer behind the screen kind
+  refuses to flatten it — it logs "Unable to render flattened version of
+  PlatformViewRepresentableAdaptor&lt;Switch&gt;" and leaves the control out of
+  the image. Drawing a lookalike in pure SwiftUI would make the golden pass
+  while breaking the requirement, so this leaf waits for a kind that drives the
+  real control instead.
+  </details>
 - `2.13` The segment-mode switch cannot be turned on while no autodetector is available, and reports itself unavailable rather than silently ignoring the gesture.
   <details><summary>Phase A has no autodetector</summary>
 
@@ -78,7 +87,7 @@ state an owner checks by sight.
   property of the stage model, so the switch becomes real the moment a detector
   registers, with no view change.
   </details>
-- `2.14` ⚠ TBD A laugh strip runs under the current joke, lit while the live laugh level is above the speak-over threshold and dim below it.
+- `2.14` A laugh strip runs under the current joke, lit while the live laugh level is above the speak-over threshold and dim below it.
 
 ## 3 — Stage mode, driven
 
