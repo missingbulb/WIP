@@ -79,6 +79,15 @@ public struct StageModel {
 
     public var plannedCount: Int { cards.count }
 
+    /// How long a joke has run by `now`, across every segment it has: the
+    /// closed ones plus the one still open. A card's own `runTime` counts only
+    /// closed segments, so the live joke needs the clock to answer.
+    public func runTime(of jokeID: UUID, at now: CaptureTime) -> TimeInterval {
+        segments.filter { $0.jokeID == jokeID }.reduce(0) { total, segment in
+            total + ((segment.end ?? now).seconds - segment.start.seconds)
+        }
+    }
+
     /// Tapping a card marks the start of that joke (requirements 3.1–3.3, 3.6).
     @discardableResult
     public mutating func tapCard(jokeID: UUID, at time: CaptureTime) -> TapOutcome {

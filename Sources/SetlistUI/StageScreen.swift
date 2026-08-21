@@ -37,6 +37,11 @@ public struct StageState {
     var liveCard: StageCard? {
         model.cards.first(where: { $0.state == .live })
     }
+
+    /// A card's run time as of now — the live joke's keeps counting.
+    func runTime(of card: StageCard) -> TimeInterval {
+        model.runTime(of: card.id, at: CaptureTime(elapsed))
+    }
 }
 
 /// The live screen. Portrait, one screenful, no scrolling: a comedian scrolling
@@ -63,6 +68,7 @@ public struct StageScreen: View {
             segmentModeRow
             setListGrid
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Palette.ink)
         .foregroundStyle(Palette.bone)
     }
@@ -150,7 +156,7 @@ public struct StageScreen: View {
                         .font(.system(size: 32, weight: .medium))
                         .foregroundStyle(.white)
                     Spacer()
-                    Text("on \(Self.clock(card.runTime))")
+                    Text("on \(Self.clock(state.runTime(of: card)))")
                         .font(.system(size: 16, design: .monospaced))
                         .foregroundStyle(Palette.dim)
                 }
@@ -191,7 +197,10 @@ public struct StageScreen: View {
                 result = result + Text(String(characters[cursor ..< span.start])).foregroundColor(Palette.bone)
             }
             let highlighted = String(characters[span.start ..< (span.start + span.length)])
-            result = result + Text(highlighted).foregroundColor(Palette.ink).bold()
+            // A per-run background is not expressible in a single Text, so the
+            // highlight is weight and the live colour — never a darker shade,
+            // which reads as de-emphasis, the opposite of what a setup needs.
+            result = result + Text(highlighted).foregroundColor(Palette.orange).bold()
             cursor = span.start + span.length
         }
         if cursor < characters.count {
@@ -265,20 +274,36 @@ public struct StageScreen: View {
             }
             .foregroundStyle(Palette.dim)
 
-            LazyVGrid(
-                columns: Array(repeating: GridItem(.flexible(), spacing: 9), count: 3),
-                spacing: 9
-            ) {
-                ForEach(state.model.cards) { card in
-                    Button { onTapCard(card.id) } label: { cardFace(card) }
-                        .buttonStyle(.plain)
+            // Rows rather than a lazy grid: the set list takes whatever height
+            // the joke panel leaves, so nine cards fill one screen instead of
+            // sizing to their text and stranding the bottom third.
+            VStack(spacing: 9) {
+                ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
+                    HStack(spacing: 9) {
+                        ForEach(row) { card in
+                            Button { onTapCard(card.id) } label: { cardFace(card) }
+                                .buttonStyle(.plain)
+                        }
+                        ForEach(0 ..< (3 - row.count), id: \.self) { _ in
+                            Color.clear
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
+            .frame(maxHeight: .infinity)
         }
         .padding(.horizontal, 16)
         .padding(.top, 14)
         .padding(.bottom, 16)
-        .frame(maxHeight: .infinity, alignment: .top)
+        .frame(maxHeight: .infinity)
+    }
+
+    /// The set list in rows of three.
+    private var rows: [[StageCard]] {
+        stride(from: 0, to: state.model.cards.count, by: 3).map { start in
+            Array(state.model.cards[start ..< min(start + 3, state.model.cards.count)])
+        }
     }
 
     private func key(_ label: String, _ colour: Color) -> some View {
@@ -303,14 +328,14 @@ public struct StageScreen: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 13)
-        .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(cardBackground(card.state))
     }
 
     private func cardFootnote(_ card: StageCard) -> String {
         switch card.state {
-        case .live: return "LIVE · \(Self.clock(card.runTime))"
-        case .told: return Self.clock(card.runTime)
+        case .live: return "LIVE · \(Self.clock(state.runTime(of: card)))"
+        case .told: return Self.clock(state.runTime(of: card))
         case .queued: return card.joke.estimatedLength.map { "~\(Self.clock($0))" } ?? "—"
         }
     }
