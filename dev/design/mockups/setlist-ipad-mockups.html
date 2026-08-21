@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set list — iPad UI mockups</title>
+<style>
+  :root{
+    --ink:#100E0B;
+    --panel:#1C1813;
+    --rule:#26221C;
+    --edge:#3A3733;
+    --mute:#6E685F;
+    --dim:#8A8378;
+    --bone:#E8E3DA;
+    --green:#00D9A3;
+    --green-d:#00A87E;
+    --green-bg:#003D2E;
+    --orange:#FF9500;
+    --orange-d:#6B3D00;
+    --red:#FF3B30;
+    --red-l:#FF6B5E;
+    --red-bg:#2E0F0D;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#0A0908;color:#E8E3DA;font-family:var(--ui);padding:32px 16px 64px}
+  .wrap{max-width:1040px;margin:0 auto}
+  h1{font-size:22px;font-weight:500;margin:0 0 4px;letter-spacing:-0.3px}
+  .sub{font-size:14px;color:var(--dim);margin:0 0 32px}
+  .caption{font-size:13px;color:var(--dim);letter-spacing:0.6px;margin:0 0 10px;text-transform:uppercase}
+  .screens{display:flex;gap:28px;flex-wrap:wrap;justify-content:center}
+  .col{flex:1 1 440px;max-width:520px}
+
+  /* device */
+  .device{background:var(--edge);border-radius:24px;padding:12px}
+  .glass{position:relative;background:var(--ink);border-radius:14px;overflow:hidden;aspect-ratio:3/4;display:flex;flex-direction:column}
+  .cam{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#4A4641}
+
+  /* header */
+  .hdr{padding:18px 20px 0;flex:0 0 auto}
+  .hdr-row{display:flex;justify-content:space-between;align-items:center}
+  .venue{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);letter-spacing:0.6px}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--red);display:inline-block}
+  .clocks{display:flex;align-items:center;gap:18px}
+  .countdown{font-family:var(--mono);font-size:28px;font-weight:500;color:var(--orange);letter-spacing:-1px;line-height:1}
+  .elapsed{font-family:var(--mono);font-size:14px;color:var(--mute)}
+  .icons{display:flex;gap:14px;color:var(--dim);font-size:17px}
+
+  /* pacing bar */
+  .pace{display:flex;gap:3px;height:7px;margin-top:12px}
+  .pace i{display:block;background:var(--rule)}
+  .pace i.done{background:var(--green)}
+  .pace i.live{background:var(--orange)}
+
+  /* current joke */
+  .joke{margin:16px 16px 0;background:var(--panel);border-left:6px solid var(--orange);padding:18px 22px;flex:0 0 auto}
+  .joke-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
+  .joke-title{font-size:32px;font-weight:500;color:#fff;line-height:1.05}
+  .joke-meta{font-family:var(--mono);font-size:16px;color:var(--dim)}
+  .joke-body{margin:0 0 16px;font-size:25px;line-height:1.45;color:var(--bone)}
+  .setup{background:var(--orange);color:var(--ink);padding:2px 7px;font-weight:500}
+  .aside{color:var(--dim)}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{font-size:15px;color:var(--dim);border:1px solid var(--edge);padding:4px 12px}
+  .tag.cb{color:var(--green);border-color:#00654E}
+  .wave{background:var(--ink);height:58px}
+  .wave svg{width:100%;height:58px;display:block}
+
+  /* toggle */
+  .toggle-row{margin:16px 16px 0;display:flex;align-items:center;gap:13px;flex:0 0 auto}
+  .sw{position:relative;display:inline-block;width:52px;height:32px;border-radius:16px;background:#39393D;cursor:pointer;flex:0 0 auto;transition:background .18s ease;border:none;padding:0}
+  .sw:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+  .knob{position:absolute;top:2px;left:2px;width:28px;height:28px;border-radius:50%;background:#fff;transition:transform .18s ease}
+  .sw[aria-checked="true"]{background:#30D158}
+  .sw[aria-checked="true"] .knob{transform:translateX(20px)}
+  .sw-label{font-size:17px;color:var(--dim)}
+  .sw-label.on{color:#30D158}
+
+  /* set list */
+  .list{padding:14px 16px 16px;flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+  .list-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;flex:0 0 auto;font-size:13px;color:var(--dim)}
+  .list-hdr .lbl{font-size:14px;letter-spacing:0.6px}
+  .key i{display:inline-block;width:10px;height:10px;margin-right:5px}
+  .key span{margin-left:13px}
+  .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:9px;flex:1 1 auto;min-height:0}
+  .card{background:var(--panel);padding:13px 14px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;border:none;text-align:left;font-family:inherit}
+  .card h3{font-size:22px;font-weight:500;color:#F5F1EA;line-height:1.15;margin:0}
+  .card p{margin:0;font-size:14px;color:var(--dim)}
+  .card .t{font-family:var(--mono);font-size:14px;color:var(--green-d)}
+  .card.told{background:var(--green-bg)}
+  .card.told h3{color:var(--green)}
+  .card.live{background:var(--orange)}
+  .card.live h3{color:var(--ink)}
+  .card.live .t{color:var(--orange-d)}
+  .card.closer{border:2px solid var(--orange);padding:11px 12px}
+  .card.closer p{color:var(--orange)}
+  .card p.cb{color:var(--green)}
+
+  /* analysis */
+  .an-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--rule);flex:0 0 auto}
+  .an-title{font-size:26px;font-weight:500;color:#fff}
+  .pill{font-size:13px;color:var(--dim);border:1px solid var(--edge);padding:2px 9px;margin-left:10px}
+  .an-stat{font-family:var(--mono);font-size:15px;color:var(--dim)}
+  .takes{padding:14px 20px 16px;border-bottom:1px solid var(--rule);flex:0 0 auto}
+  .th{display:grid;grid-template-columns:150px minmax(0,1fr) 62px;gap:10px;font-size:12px;color:var(--mute);letter-spacing:0.5px;padding-bottom:8px}
+  .tr{display:grid;grid-template-columns:150px minmax(0,1fr) 62px;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--rule)}
+  .tr .show{font-size:16px;color:#F5F1EA}
+  .tr .when{font-size:13px;color:var(--mute)}
+  .tr svg{width:100%;height:28px;display:block}
+  .tr .peak{text-align:right;font-family:var(--mono);font-size:17px;color:var(--green)}
+  .tr.bad{background:var(--red-bg);padding-left:8px;padding-right:8px}
+  .tr.bad .show{color:var(--red-l)}
+  .tr.bad .when{color:#B84A40}
+  .tr.bad .peak{color:var(--red-l)}
+  .tr .peak.weak{color:var(--dim)}
+  .flag{margin-top:12px;background:var(--red-bg);border-left:4px solid var(--red);padding:10px 14px;font-size:15px;color:#FFB3AC;line-height:1.5}
+  .chain{padding:16px 20px 20px;flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+  .chain-hdr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex:0 0 auto}
+  .chain-hdr h3{margin:0;font-size:18px;font-weight:500;color:#F5F1EA}
+  .chain-hdr span{font-size:13px;color:var(--mute)}
+  .bars{display:flex;gap:5px;align-items:flex-end;flex:1 1 auto;min-height:70px}
+  .bars i{display:block;flex:1;background:var(--green)}
+  .bars i.cold{background:var(--red)}
+  .blabels{display:flex;gap:5px;font-size:12px;color:var(--mute);margin-top:6px;flex:0 0 auto}
+  .blabels span{flex:1}
+  .blabels span.cold{color:var(--red-l)}
+  .read{margin-top:14px;font-size:16px;color:#D8D2C7;line-height:1.5;border-left:4px solid var(--edge);padding-left:12px;flex:0 0 auto}
+  .read b{color:var(--red-l);font-weight:400}
+  .acts{display:flex;gap:10px;margin-top:16px;flex:0 0 auto}
+  .acts span{font-size:15px;padding:9px 16px}
+  .acts .p{background:var(--green);color:var(--ink);font-weight:500}
+  .acts .s{border:1px solid var(--edge);color:#F5F1EA}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Set list — iPad mockups</h1>
+  <p class="sub">Portrait, 3:4. Stage mode and joke analysis. The toggle on the left screen works.</p>
+
+  <div class="screens">
+
+    <!-- ============ LIVE ============ -->
+    <div class="col">
+      <p class="caption">1 · Stage mode</p>
+      <div class="device"><div class="glass">
+        <div class="cam"></div>
+
+        <div class="hdr">
+          <div class="hdr-row">
+            <div class="venue"><span class="dot"></span>THE STAND · FRI LATE</div>
+            <div class="clocks">
+              <div style="display:flex;align-items:baseline;gap:7px">
+                <span class="countdown">&minus;1:18</span>
+                <span class="elapsed">18:42 / 20:00</span>
+              </div>
+              <div class="icons">◉ ⚙</div>
+            </div>
+          </div>
+          <div class="pace">
+            <i class="done" style="flex:31"></i><i class="done" style="flex:20"></i><i class="done" style="flex:18"></i>
+            <i class="live" style="flex:14"></i>
+            <i style="flex:25"></i><i style="flex:30"></i><i style="flex:17"></i><i style="flex:22"></i><i style="flex:26"></i>
+          </div>
+        </div>
+
+        <div class="joke">
+          <div class="joke-top">
+            <span class="joke-title">Airport security</span>
+            <span class="joke-meta">on 1:24</span>
+          </div>
+          <p class="joke-body"><span class="setup">They make you take off your shoes but not your socks</span> — which tells me the threat level is exactly one layer deep. <span class="aside">…beat… I've been wearing the same socks since Tuesday, so if anything I'm the escalation.</span></p>
+          <div class="tags">
+            <span class="tag cb">callback → dad's van</span>
+            <span class="tag">alt tag: "TSA loyalty card"</span>
+            <span class="tag">cut if short</span>
+          </div>
+          <div class="wave">
+            <svg viewBox="0 0 600 58" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0 48 L14 45 L28 47 L42 37 L56 45 L70 41 L84 25 L98 7 L112 3 L126 16 L140 32 L154 41 L168 46 L182 40 L196 45 L210 35 L224 43 L238 39 L252 46 L266 41 L280 47 L294 32 L308 18 L322 10 L336 22 L350 34 L364 42 L378 47 L392 41 L406 46 L420 45 L434 48 L448 44 L462 47 L476 46 L490 49 L504 48 L518 50 L532 49 L546 51 L560 50 L574 52 L588 51 L600 52 L600 58 L0 58 Z" fill="#00D9A3"/>
+              <line x1="450" y1="0" x2="450" y2="58" stroke="#FF3B30" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <button class="sw" id="sw" role="switch" aria-checked="false" aria-labelledby="swlabel"><span class="knob"></span></button>
+          <span class="sw-label" id="swlabel">Manual switch</span>
+        </div>
+
+        <div class="list">
+          <div class="list-hdr">
+            <span class="lbl">SET LIST · 4 / 9</span>
+            <span class="key"><i style="background:#00D9A3"></i>told<span><i style="background:#FF9500"></i>live</span><span><i style="background:#3A3733"></i>queued</span></span>
+          </div>
+          <div class="grid">
+            <button class="card told"><h3>Crowd work</h3><p class="t">3:10</p></button>
+            <button class="card told"><h3>Dad's van</h3><p class="t">2:05</p></button>
+            <button class="card told"><h3>Flatmate rota</h3><p class="t">1:48</p></button>
+            <button class="card live"><h3>Airport security</h3><p class="t">LIVE · 1:24</p></button>
+            <button class="card"><h3>Gym induction</h3><p>~2:30 · strong opener</p></button>
+            <button class="card"><h3>Wedding speech</h3><p>~3:00 · needs a quiet room</p></button>
+            <button class="card"><h3>Nan's iPad</h3><p class="cb">~1:40 · callback ready</p></button>
+            <button class="card"><h3>Dating apps</h3><p>~2:15 · untested</p></button>
+            <button class="card closer"><h3>Closer — the ferry</h3><p>~2:40 · always closes</p></button>
+          </div>
+        </div>
+
+      </div></div>
+    </div>
+
+    <!-- ============ ANALYSIS ============ -->
+    <div class="col">
+      <p class="caption">2 · Joke analysis</p>
+      <div class="device"><div class="glass">
+        <div class="cam"></div>
+
+        <div class="an-hdr">
+          <div><span style="color:#8A8378;margin-right:10px">←</span><span class="an-title">Airport security</span><span class="pill">5 takes</span></div>
+          <span class="an-stat">avg 3.4s</span>
+        </div>
+
+        <div class="takes">
+          <div class="th"><span>SHOW</span><span>ALIGNED ON PUNCH</span><span style="text-align:right">PEAK</span></div>
+
+          <div class="tr">
+            <div><div class="show">The Stand</div><div class="when">2 Aug · late · drunk</div></div>
+            <svg viewBox="0 0 400 28" preserveAspectRatio="none" aria-hidden="true"><line x1="140" y1="0" x2="140" y2="28" stroke="#3A3733" stroke-width="1"/><path d="M0 24 L60 22 L100 23 L140 6 L170 2 L200 11 L240 19 L300 23 L400 24" fill="none" stroke="#00D9A3" stroke-width="2.5"/></svg>
+            <span class="peak">4.9s</span>
+          </div>
+
+          <div class="tr">
+            <div><div class="show">Monkey Barrel</div><div class="when">26 Jul · early · mixed</div></div>
+            <svg viewBox="0 0 400 28" preserveAspectRatio="none" aria-hidden="true"><line x1="140" y1="0" x2="140" y2="28" stroke="#3A3733" stroke-width="1"/><path d="M0 24 L60 23 L100 22 L140 11 L175 8 L205 15 L245 21 L300 24 L400 24" fill="none" stroke="#00D9A3" stroke-width="2.5"/></svg>
+            <span class="peak">3.6s</span>
+          </div>
+
+          <div class="tr bad">
+            <div><div class="show">Corp gig, Leith</div><div class="when">19 Jul · 7pm · seated dinner</div></div>
+            <svg viewBox="0 0 400 28" preserveAspectRatio="none" aria-hidden="true"><line x1="140" y1="0" x2="140" y2="28" stroke="#B84A40" stroke-width="1"/><path d="M0 24 L60 24 L100 23 L140 21 L180 22 L220 23 L280 24 L400 24" fill="none" stroke="#FF3B30" stroke-width="2.5"/></svg>
+            <span class="peak">0.4s</span>
+          </div>
+
+          <div class="tr">
+            <div><div class="show">Bunker, Glasgow</div><div class="when">12 Jul · late · students</div></div>
+            <svg viewBox="0 0 400 28" preserveAspectRatio="none" aria-hidden="true"><line x1="140" y1="0" x2="140" y2="28" stroke="#3A3733" stroke-width="1"/><path d="M0 24 L60 22 L100 23 L140 8 L172 4 L202 14 L242 20 L300 23 L400 24" fill="none" stroke="#00D9A3" stroke-width="2.5"/></svg>
+            <span class="peak">4.1s</span>
+          </div>
+
+          <div class="tr">
+            <div><div class="show">Open mic, Leith</div><div class="when">5 Jul · early · comics</div></div>
+            <svg viewBox="0 0 400 28" preserveAspectRatio="none" aria-hidden="true"><line x1="140" y1="0" x2="140" y2="28" stroke="#3A3733" stroke-width="1"/><path d="M0 24 L60 23 L100 24 L140 14 L178 12 L210 18 L250 22 L300 24 L400 24" fill="none" stroke="#00D9A3" stroke-width="2.5"/></svg>
+            <span class="peak weak">2.1s</span>
+          </div>
+
+          <div class="flag">2.4σ below the rest. Punch landed 11s late — the transcript has an added preamble about the hire car.</div>
+        </div>
+
+        <div class="chain">
+          <div class="chain-hdr">
+            <h3>Corp gig, Leith — full show</h3>
+            <span>19 Jul · 19:30 · 80 seated · dinner service</span>
+          </div>
+          <div class="bars">
+            <i style="height:66%"></i><i style="height:50%"></i>
+            <i class="cold" style="height:22%"></i><i class="cold" style="height:9%"></i><i class="cold" style="height:15%"></i>
+            <i style="height:32%"></i><i style="height:54%"></i><i style="height:72%"></i>
+          </div>
+          <div class="blabels">
+            <span>Crowd work</span><span>Dad's van</span>
+            <span class="cold">Rota</span><span class="cold">Airport</span><span class="cold">Gym</span>
+            <span>Nan's iPad</span><span>Dating</span><span>Ferry</span>
+          </div>
+          <p class="read">The dip starts at <b>Rota</b>, not Airport. Three bits cold, recovery only at Nan's iPad — dessert service ran through the middle of the set.</p>
+          <div class="acts">
+            <span class="p">Diff transcripts</span>
+            <span class="s">Find room patterns</span>
+          </div>
+        </div>
+
+      </div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var sw=document.getElementById('sw'), label=document.getElementById('swlabel');
+  sw.addEventListener('click',function(){
+    var on = sw.getAttribute('aria-checked')!=='true';
+    sw.setAttribute('aria-checked', on?'true':'false');
+    label.textContent = on ? 'Autodetect bits' : 'Manual switch';
+    label.classList.toggle('on', on);
+  });
+})();
+</script>
+</body>
+</html>
