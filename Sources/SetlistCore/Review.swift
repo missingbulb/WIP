@@ -52,7 +52,7 @@ public enum CountdownTone: String, Equatable, Sendable {
 
 public enum Countdown {
     /// Remaining time at which the countdown turns orange.
-    public static let warningThreshold: TimeInterval = 180
+    public static let warningThreshold: TimeInterval = 60
 
     /// Remaining seconds; negative once the slot is over.
     public static func remaining(plannedLength: TimeInterval, elapsed: TimeInterval) -> TimeInterval {

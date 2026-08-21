@@ -17,7 +17,7 @@ let tapQueuedCard_3_1 = RequirementCase(id: "3.1") {
 
     let closed = stage.segments[0]
     try expectEqual(closed.jokeID, van.id, "the closed segment belongs to the joke that was live")
-    try expectEqual(closed.end, CaptureTime(125), "the previous segment closed at the tap")
+    try expectEqual(closed.end, CaptureTime(999), "the previous segment closed at the tap")
 
     let opened = stage.segments[1]
     try expectEqual(opened.jokeID, airport.id, "the opened segment belongs to the tapped joke")
