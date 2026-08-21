@@ -7,11 +7,16 @@ import UIKit
 /// size is part of the spec rather than a per-case choice.
 let SCREEN_SIZE = CGSize(width: 834, height: 1112)
 
-/// Set to refresh rather than compare — how an intended UI change lands, with
-/// the new PNGs riding the diff for the owner to approve.
+/// Refresh rather than compare — how an intended UI change lands, with the new
+/// PNGs riding the diff for the owner to approve. A file rather than an
+/// environment variable: xcodebuild does not carry one into a hostless test
+/// bundle's process, and a refresh that silently did not happen is worse than
+/// no refresh at all.
 private var isRefreshing: Bool {
-    ProcessInfo.processInfo.environment["REFRESH_GOLDENS"] == "1"
+    FileManager.default.fileExists(atPath: REFRESH_MARKER.path)
 }
+
+private let REFRESH_MARKER = REPO_ROOT.appendingPathComponent("dev/requirements/screen/.refresh")
 
 private let failuresDirectory = REPO_ROOT.appendingPathComponent("dev/requirements/screen/.failures")
 

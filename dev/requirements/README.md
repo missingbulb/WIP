@@ -25,7 +25,8 @@ Screen goldens are never written by hand or by a local run: the
 `refresh-goldens` workflow re-renders every one on a simulator and commits the
 result, so an intended UI change lands as PNGs in the diff for the owner to
 approve. Run it from the Actions tab, or put `[refresh goldens]` in the commit
-message of a push on the branch. It is never how a red case gets fixed — a
+message of a push on the branch. It works by dropping
+`screen/.refresh` beside the cases for the length of one run. It is never how a red case gets fixed — a
 render that changed unintentionally is a bug in the change.
 
 `gate/pending.json` is the burn-down list of leaves that are specified but not

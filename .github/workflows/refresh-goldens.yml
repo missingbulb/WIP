@@ -36,16 +36,15 @@ jobs:
           echo "udid=$udid" >> "$GITHUB_OUTPUT"
       - name: Re-render every screen golden
         working-directory: app
-        env:
-          REFRESH_GOLDENS: "1"
         run: |
+          touch ../dev/requirements/screen/.refresh
           set -o pipefail
           xcodebuild test \
             -project Setlist.xcodeproj \
             -scheme Setlist \
             -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
-            CODE_SIGNING_ALLOWED=NO \
-            TEST_RUNNER_REFRESH_GOLDENS=1 > xcodebuild.log || { tail -120 xcodebuild.log; exit 1; }
+            CODE_SIGNING_ALLOWED=NO > xcodebuild.log || { tail -120 xcodebuild.log; rm -f ../dev/requirements/screen/.refresh; exit 1; }
+          rm -f ../dev/requirements/screen/.refresh
       - name: Regenerate the gallery and commit
         run: |
           node dev/requirements/gate/coverage-gate.mjs --write || true
