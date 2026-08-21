@@ -18,10 +18,6 @@
       "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
     },
     {
-      "id": "2.5",
-      "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
-    },
-    {
       "id": "2.6",
       "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
     },

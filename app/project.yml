@@ -19,6 +19,8 @@ targets:
     dependencies:
       - package: Setlist
         product: SetlistCore
+      - package: Setlist
+        product: SetlistUI
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.missingbulb.setlist
@@ -33,3 +35,30 @@ targets:
         INFOPLIST_FILE: Setlist/Info.plist
         SWIFT_VERSION: "5.9"
         ENABLE_USER_SCRIPT_SANDBOXING: YES
+  SetlistRequirements:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: ../dev/requirements
+        excludes:
+          - "gate"
+          - "requirements.md"
+          - "README.md"
+    dependencies:
+      - package: Setlist
+        product: SetlistCore
+      - package: Setlist
+        product: SetlistUI
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.9"
+schemes:
+  Setlist:
+    build:
+      targets:
+        Setlist: all
+        SetlistRequirements: [test]
+    test:
+      targets:
+        - SetlistRequirements

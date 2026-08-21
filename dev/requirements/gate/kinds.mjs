@@ -8,6 +8,9 @@ export const KINDS = [
     // A rendered resting state, pixel-exact against a committed golden the
     // owner approves by sight.
     images: true,
+    // Rendering needs SwiftUI and a simulator, so this kind runs only in the
+    // `app` CI job; elsewhere its manifest is empty.
+    platform: '#if canImport(SwiftUI) && os(iOS)',
   },
   {
     id: 'behavior',

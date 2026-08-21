@@ -10,12 +10,17 @@ let package = Package(
     platforms: [.iOS(.v17), .macOS(.v13)],
     products: [
         .library(name: "SetlistCore", targets: ["SetlistCore"]),
+        .library(name: "SetlistUI", targets: ["SetlistUI"]),
     ],
     targets: [
         .target(name: "SetlistCore", path: "Sources/SetlistCore"),
+        // Every file here is behind `#if canImport(SwiftUI)`, so the module is
+        // empty rather than broken where SwiftUI does not exist — the Linux
+        // lane still builds the package.
+        .target(name: "SetlistUI", dependencies: ["SetlistCore"], path: "Sources/SetlistUI"),
         .testTarget(
             name: "SetlistRequirements",
-            dependencies: ["SetlistCore"],
+            dependencies: ["SetlistCore", "SetlistUI"],
             path: "dev/requirements",
             exclude: ["README.md", "requirements.md", "gate"]
         ),

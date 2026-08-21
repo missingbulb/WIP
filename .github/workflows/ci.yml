@@ -50,7 +50,7 @@ jobs:
       - run: swift test
 
   app:
-    name: iPad app build
+    name: iPad app and screen requirements
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
@@ -60,11 +60,29 @@ jobs:
       - name: Generate the Xcode project
         working-directory: app
         run: xcodegen generate
-      - name: Build for the simulator
+      - name: Pick an iPad simulator
+        id: sim
+        run: |
+          udid=$(xcrun simctl list devices available --json \
+            | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; print(next(x["udid"] for runtime in sorted(d) if "iOS" in runtime for x in d[runtime] if "iPad" in x["name"]))')
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+          xcrun simctl list devices available | grep -A0 "$udid"
+      - name: Build the app and run every requirement kind
         working-directory: app
         run: |
-          xcodebuild build \
+          set -o pipefail
+          xcodebuild test \
             -project Setlist.xcodeproj \
             -scheme Setlist \
-            -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            CODE_SIGNING_ALLOWED=NO > xcodebuild.log
+      - name: Report what failed
+        if: failure()
+        run: tail -120 app/xcodebuild.log
+      - name: Keep the renders that did not match
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screen-failures
+          path: dev/requirements/screen/.failures/
+          if-no-files-found: ignore

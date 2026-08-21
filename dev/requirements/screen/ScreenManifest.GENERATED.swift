@@ -3,5 +3,11 @@
 // executes; the gate fails when it and cases/ disagree.
 
 enum ScreenManifest {
+#if canImport(SwiftUI) && os(iOS)
+    static let cases: [RequirementCase] = [
+        setListGrid_2_5,
+    ]
+#else
     static let cases: [RequirementCase] = []
+#endif
 }

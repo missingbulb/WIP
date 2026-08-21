@@ -53,7 +53,7 @@ state an owner checks by sight.
 - `2.2` ⚠ TBD The current joke occupies the top region, its body text the largest text on the screen.
 - `2.3` ⚠ TBD Crucial setups render highlighted inside the current joke's body.
 - `2.4` ⚠ TBD The current joke's optional text — alternate tags, callbacks, delivery notes — renders below the body as tags, callbacks distinguished from plain tags.
-- `2.5` ⚠ TBD The set list renders as a 3-column grid of nine cards, each card carrying its joke's title.
+- `2.5` The set list renders as a 3-column grid of nine cards, each card carrying its joke's title.
 - `2.6` ⚠ TBD Told, live and queued cards are each coloured differently, with a key naming the three states.
 - `2.7` No stage-mode card carries a laugh count or laugh score.
   <details><summary>Owner requirement, asserted as a rule not a picture</summary>
