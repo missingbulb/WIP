@@ -1,6 +1,7 @@
 #if canImport(SwiftUI) && os(iOS)
 import SwiftUI
 import UIKit
+import SetlistUI
 
 /// One portrait iPad screen, at true 3:4 proportions. Every screen case renders
 /// at exactly this size: the requirement is what fits on one screen, so the
@@ -22,17 +23,41 @@ private let failuresDirectory = REPO_ROOT.appendingPathComponent("dev/requiremen
 
 /// Renders `view` and compares it, pixel for pixel, with the committed golden.
 /// No tolerance: a tolerance is a standing invitation for unreviewed drift.
+///
+/// `region` is the crop: the golden is the smallest surface that proves the
+/// leaf, because a reviewer approving one line should be looking at the thing
+/// that line claims, not at the whole iPad. Always the composed screen — the
+/// crop is taken out of a full render, never by laying an element out alone,
+/// which would prove it in a context the product never shows. Passing nil is a
+/// deliberate exception, for a leaf that really is about the whole screen.
+///
 /// `frame` numbers a saga's steps; a screen case leaves it nil and owns one
 /// golden named for its leaf alone.
 @MainActor
-func expectScreen<V: View>(_ view: V, slug: String, id: String, frame: Int? = nil) throws {
+func expectScreen<V: View>(
+    _ view: V,
+    slug: String,
+    id: String,
+    region: StageRegion? = nil,
+    frame: Int? = nil
+) throws {
     let name = frame.map { "\(slug).\(id).step-\(String(format: "%02d", $0))" } ?? "\(slug).\(id)"
     let kind = frame == nil ? "screen" : "saga"
-    let renderer = ImageRenderer(content: view.frame(width: SCREEN_SIZE.width, height: SCREEN_SIZE.height))
+
+    var measured: [StageRegion: CGRect] = [:]
+    let renderer = ImageRenderer(
+        content: StageRegionReader(
+            content: { view.frame(width: SCREEN_SIZE.width, height: SCREEN_SIZE.height) },
+            onMeasure: { measured = $0 }
+        )
+    )
     renderer.scale = 1
-    guard let rendered = renderer.uiImage, let actual = rendered.cgImage else {
+    guard let whole = renderer.uiImage, let wholeImage = whole.cgImage else {
         throw RequirementFailure(description: "\(name): the view did not render")
     }
+
+    let actual = try crop(wholeImage, to: region, measured: measured, name: name)
+    let rendered = UIImage(cgImage: actual)
 
     let golden = REPO_ROOT.appendingPathComponent("dev/requirements/\(kind)/cases/\(name).png")
     if isRefreshingGoldens {
@@ -65,6 +90,27 @@ func expectScreen<V: View>(_ view: V, slug: String, id: String, frame: Int? = ni
     throw RequirementFailure(
         description: "\(name): \(differing) pixels differ from the golden. The render is in .failures/."
     )
+}
+
+/// The region's rect comes from the render that just happened, so a crop can
+/// never drift from the layout it was taken out of.
+private func crop(
+    _ image: CGImage,
+    to region: StageRegion?,
+    measured: [StageRegion: CGRect],
+    name: String
+) throws -> CGImage {
+    guard let region else { return image }
+    guard let rect = measured[region] else {
+        throw RequirementFailure(description: "\(name): the screen published no \(region.rawValue) region")
+    }
+    // A sub-point edge would round the crop differently run to run; growing to
+    // whole pixels keeps the golden stable and never loses part of the element.
+    let bounds = rect.integral.intersection(CGRect(x: 0, y: 0, width: image.width, height: image.height))
+    guard !bounds.isEmpty, let cropped = image.cropping(to: bounds) else {
+        throw RequirementFailure(description: "\(name): the \(region.rawValue) region is \(rect), outside the render")
+    }
+    return cropped
 }
 
 private func pixels(of image: CGImage) throws -> [UInt8] {

@@ -15,7 +15,7 @@ swift test                                            # the kinds that need no s
 
 | kind | proves | expected | runs |
 |---|---|---|---|
-| `screen` | a rendered resting state | one golden PNG beside the case, pixel-exact | simulator |
+| `screen` | a rendered resting state | one golden PNG beside the case, pixel-exact, cropped to the region the leaf is about | simulator |
 | `saga` | a multi-step story | one captioned frame per step, `<slug>.<id>.step-NN.png`, plus the generated `.captions.json` | simulator |
 | `behavior` | a driven gesture and what it produces | coded assertions against the fakes' recordings | anywhere |
 | `logic` | a pure product rule | a coded `verify()` against shipped code | anywhere |
@@ -32,6 +32,19 @@ sessions on this repo do not have — they run in CI (`requirements` for the
 kinds above that need no simulator, `app` for the app build plus `screen` and
 `saga`), so a change to anything under `Sources/` or here is verified by the
 pull request's checks, never locally.
+
+## What a screen case captures
+
+A screen case names the [`StageRegion`](../../Sources/SetlistUI/StageRegion.swift)
+its leaf is about, and the golden is that region cropped out of a full render of
+the composed screen. The screen publishes its own region bounds, so a case asks
+for `.clocks` or `.jokeBody` and never for coordinates; adding a region is a case
+in that enum plus a `.stageRegion(_:)` on the view it names.
+
+Omitting the region captures the whole screen. That is a deliberate exception —
+for a leaf that claims something about the screen as a whole, like one that
+compares an element against everything around it — and the leaf says so in its
+notes.
 
 ## Goldens
 

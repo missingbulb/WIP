@@ -90,6 +90,7 @@ public struct StageScreen: View {
                         .kerning(0.6)
                         .foregroundStyle(Palette.dim)
                 }
+                .stageRegion(.venue)
                 Spacer()
                 HStack(alignment: .firstTextBaseline, spacing: 7) {
                     Text(Self.countdown(state.remaining))
@@ -99,6 +100,7 @@ public struct StageScreen: View {
                         .font(.system(size: 14, design: .monospaced))
                         .foregroundStyle(Palette.mute)
                 }
+                .stageRegion(.clocks)
             }
             pacingBar
         }
@@ -127,6 +129,7 @@ public struct StageScreen: View {
             }
         }
         .frame(height: 7)
+        .stageRegion(.pacingBar)
     }
 
     private func paceColour(_ cardState: CardState) -> Color {
@@ -160,16 +163,19 @@ public struct StageScreen: View {
                         .font(.system(size: 16, design: .monospaced))
                         .foregroundStyle(Palette.dim)
                 }
+                .stageRegion(.jokeTitleRow)
                 Self.body(of: card.joke)
                     .font(.system(size: 25))
                     .lineSpacing(9)
+                    .stageRegion(.jokeBody)
                 if !card.joke.tags.isEmpty || !card.joke.callbacks.isEmpty {
-                    tags(for: card.joke)
+                    tags(for: card.joke).stageRegion(.jokeTags)
                 }
             } else {
                 Text("Tap a card to start")
                     .font(.system(size: 25))
                     .foregroundStyle(Palette.dim)
+                    .stageRegion(.jokeBody)
             }
             laughStrip
         }
@@ -180,6 +186,7 @@ public struct StageScreen: View {
         .overlay(alignment: .leading) { Rectangle().fill(Palette.orange).frame(width: 6) }
         .padding(.horizontal, 16)
         .padding(.top, 16)
+        .stageRegion(.currentJoke)
     }
 
     /// The joke's text with its crucial setups highlighted — the words the
@@ -236,6 +243,7 @@ public struct StageScreen: View {
             .fill(state.laughLevel > StageState.speakOverThreshold ? Palette.green : Palette.rule)
             .frame(height: 10)
             .frame(maxWidth: .infinity)
+            .stageRegion(.laughStrip)
     }
 
     // MARK: - Segment mode
@@ -255,6 +263,7 @@ public struct StageScreen: View {
         }
         .padding(.horizontal, 16)
         .padding(.top, 16)
+        .stageRegion(.segmentMode)
     }
 
     // MARK: - Set list
@@ -265,12 +274,14 @@ public struct StageScreen: View {
                 Text("SET LIST · \(state.model.startedCount) / \(state.model.plannedCount)")
                     .font(.system(size: 14))
                     .kerning(0.6)
+                    .stageRegion(.setListCount)
                 Spacer()
                 HStack(spacing: 13) {
                     key("told", Palette.green)
                     key("live", Palette.orange)
                     key("queued", Palette.edge)
                 }
+                .stageRegion(.setListKey)
             }
             .foregroundStyle(Palette.dim)
 
@@ -292,6 +303,7 @@ public struct StageScreen: View {
                 }
             }
             .frame(maxHeight: .infinity)
+            .stageRegion(.grid)
         }
         .padding(.horizontal, 16)
         .padding(.top, 14)
