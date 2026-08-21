@@ -42,7 +42,7 @@ performed at.
   is independently optional: an unset descriptor is absent, never a zero or an
   empty string, so "80 seated" and "unknown size, seated" stay distinguishable.
   </details>
-- `1.6` ⚠ TBD The library survives app relaunch: jokes, sets and shows written in one session are read back in the next.
+- `1.6` The library survives app relaunch: jokes, sets and shows written in one session are read back in the next.
 
 ## 2 — Stage mode, rendered state
 
@@ -87,7 +87,7 @@ What card taps do. Manual segmentation is Phase A's only segmentation.
 - `3.1` Tapping a queued card ends the live joke's segment and opens a segment for the tapped joke at the same instant.
 - `3.2` Tapping the live card changes nothing and opens no zero-length segment.
 - `3.3` Tapping a told card re-opens it as live and opens a second segment for it, leaving its first segment intact.
-- `3.4` ⚠ TBD Card taps are stamped on the capture clock, so a tap's timestamp is comparable with a laugh event's without conversion.
+- `3.4` Card taps are stamped on the capture clock, so a tap's timestamp is comparable with a laugh event's without conversion.
 - `3.5` The set-list header counts jokes started out of jokes planned, counting a re-opened joke once.
 - `3.6` Every segment opened by a card tap records `manual` provenance.
 
@@ -95,8 +95,16 @@ What card taps do. Manual segmentation is Phase A's only segmentation.
 
 The recording session. One module owns the microphone.
 
-- `4.1` ⚠ TBD Recording starts when the show starts and runs unbroken to the end of the set.
-- `4.2` ⚠ TBD The recording is written as AAC into the app's own container, in a location the user can delete.
+- `4.1` Recording starts when the show starts and runs unbroken to the end of the set.
+  <details><summary>What the capture proofs actually confirm</summary>
+
+  4.1, 4.2 and 4.6 drive a fake recording session that records what the app
+  asked it to do. They confirm this code *asks* for a recording of the right
+  shape at the right moments — not that AVAudioEngine delivers one. The part no
+  fake can stand in for is 4.5, recording through a locked screen, which stays a
+  tracked gap until it is measured on a real iPad.
+  </details>
+- `4.2` The recording is written as AAC into the app's own container, in a location the user can delete.
 - `4.3` A laugh event carries its class, confidence, start, duration, intensity and the identifier of the detector that produced it.
   <details><summary>Detector identity is not optional</summary>
 
@@ -107,7 +115,7 @@ The recording session. One module owns the microphone.
   </details>
 - `4.4` Laugh events and card taps are ordered on one monotonic clock, so their interleaving is well defined even across a wall-clock change.
 - `4.5` ⚠ TBD Recording continues while the iPad is locked and the app is backgrounded.
-- `4.6` ⚠ TBD An audio-session interruption finalises the recording so far and resumes into the same show without losing captured audio.
+- `4.6` An audio-session interruption finalises the recording so far and resumes into the same show without losing captured audio.
 
 ## 5 — Review
 
