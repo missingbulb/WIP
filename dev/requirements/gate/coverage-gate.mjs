@@ -119,16 +119,20 @@ for (const kind of KINDS) {
 
   // Swift discovers nothing at runtime, so the manifest is the registry the
   // runner reads — and it is generated, never hand-listed.
-  const manifestPath = join(kindDir, 'Manifest.GENERATED.swift');
-  const manifest = renderManifest(kind, cases);
-  compare(manifestPath, manifest, `kinds: \`${kind.id}/Manifest.GENERATED.swift\` is out of sync with cases/ — run the gate with --write`);
+  // One module compiles every kind's manifest, so the basenames must differ.
+  const manifestName = `${kindName(kind)}Manifest.GENERATED.swift`;
+  compare(
+    join(kindDir, manifestName),
+    renderManifest(kind, cases),
+    `kinds: \`${kind.dir}/${manifestName}\` is out of sync with cases/ — run the gate with --write`,
+  );
 }
 
 // A kind nothing runs is a kind that proves nothing, so the runner must name
 // every registered manifest.
 const runner = readFileSync(join(ROOT, 'Runner.swift'), 'utf8');
 for (const kind of KINDS) {
-  const name = `${kind.id[0].toUpperCase()}${kind.id.slice(1)}Manifest.cases`;
+  const name = `${kindName(kind)}Manifest.cases`;
   if (!runner.includes(name)) fail(`kinds: Runner.swift never executes \`${name}\``);
 }
 
@@ -189,8 +193,12 @@ function symbolFor(slug, id) {
   return `${camel}_${id.replaceAll('.', '_')}`;
 }
 
+function kindName(kind) {
+  return kind.id[0].toUpperCase() + kind.id.slice(1);
+}
+
 function renderManifest(kind, cases) {
-  const name = kind.id[0].toUpperCase() + kind.id.slice(1);
+  const name = kindName(kind);
   const entries = cases.length
     ? `[\n${cases.map((c) => `        ${c.symbol},`).join('\n')}\n    ]`
     : '[]';
