@@ -5,6 +5,9 @@ name: Refresh goldens
 # changed unintentionally is a bug in the change, not in the golden.
 on:
   workflow_dispatch:
+defaults:
+  run:
+    shell: bash
 permissions:
   contents: write
 jobs:
@@ -34,7 +37,7 @@ jobs:
             -scheme Setlist \
             -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
             CODE_SIGNING_ALLOWED=NO \
-            TEST_RUNNER_REFRESH_GOLDENS=1 > xcodebuild.log || tail -120 xcodebuild.log
+            TEST_RUNNER_REFRESH_GOLDENS=1 > xcodebuild.log || { tail -120 xcodebuild.log; exit 1; }
       - name: Regenerate the gallery and commit
         run: |
           node dev/requirements/gate/coverage-gate.mjs --write || true
