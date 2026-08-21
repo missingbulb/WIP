@@ -2,7 +2,7 @@
 import SetlistUI
 
 /// 3.1 — the joke panel against the rest of the screen, which is what makes its body the largest text on it.
-// A whole-screen claim: the leaf is about the screen, not an element in it.
+// whole-screen: "the largest text on the screen" compares the panel against everything else, so a crop of the panel cannot prove it.
 
 let currentJoke_3_1 = RequirementCase(id: "3.1") {
     try MainActor.assumeIsolated {

@@ -6,8 +6,9 @@ export const KINDS = [
     id: 'screen',
     dir: 'screen',
     // A rendered resting state, pixel-exact against a committed golden the
-    // owner approves by sight.
+    // owner approves by sight, cropped to the element its leaf is about.
     images: true,
+    scoped: true,
     // Rendering needs SwiftUI and a simulator, so this kind runs only in the
     // `app` CI job; elsewhere its manifest is empty.
     platform: '#if canImport(SwiftUI) && os(iOS)',

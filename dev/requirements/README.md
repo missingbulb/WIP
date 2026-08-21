@@ -43,8 +43,10 @@ in that enum plus a `.stageRegion(_:)` on the view it names.
 
 Omitting the region captures the whole screen. That is a deliberate exception —
 for a leaf that claims something about the screen as a whole, like one that
-compares an element against everything around it — and the leaf says so in its
-notes.
+compares an element against everything around it — and the case says why in a
+`// whole-screen: <reason>` comment, which the gate requires. A case that
+silently captured everything would still pass; it would just prove less, and
+that is the failure this kind exists to avoid.
 
 ## Goldens
 

@@ -116,6 +116,19 @@ for (const kind of KINDS) {
         if (!goldens.some((g) => g.startsWith(`${c.slug}.${c.id}`))) {
           fail(`kinds: \`${kind.id}/cases/${c.file}\` is an image-kind case with no committed golden`);
         }
+        if (kind.scoped) {
+          // A picture of the whole screen where the leaf is about one element
+          // is the failure mode this kind exists to avoid, and it is invisible
+          // in a green run — the case still passes, it just proves less. So the
+          // capture's scope is declared, one way or the other.
+          const source = readFileSync(join(casesDir, c.file), 'utf8');
+          if (!/\bregion: \./.test(source) && !/\/\/ whole-screen: \S/.test(source)) {
+            fail(
+              `kinds: \`${kind.id}/cases/${c.file}\` names no region — crop to the element the leaf is about, ` +
+              'or say why the whole screen is the proof in a `// whole-screen: <reason>` comment',
+            );
+          }
+        }
         if (!kind.frames) continue;
         // A story with no caption is a slideshow: the frames only narrate
         // anything while the captions stay in step with them.
