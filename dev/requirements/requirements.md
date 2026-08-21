@@ -102,6 +102,7 @@ the slot, and that the set is being recorded.
 - `2.1` The stage screen fills one portrait iPad screen at 3:4 with no scrolling region.
 
   <!-- req-gallery:2.1 -->
+  ![one-screen.2.1](screen/cases/one-screen.2.1.png)
   <!-- /req-gallery:2.1 -->
   <details><summary>Notes</summary>
 
@@ -111,22 +112,27 @@ the slot, and that the set is being recorded.
 - `2.2` A red dot sits at the head of the header whenever capture is running.
 
   <!-- req-gallery:2.2 -->
+  ![recording-indicator.2.2](screen/cases/recording-indicator.2.2.png)
   <!-- /req-gallery:2.2 -->
 - `2.3` The header names the room, upper-cased and letter-spaced: **`THE STAND · FRI LATE`**.
 
   <!-- req-gallery:2.3 -->
+  ![venue-line.2.3](screen/cases/venue-line.2.3.png)
   <!-- /req-gallery:2.3 -->
 - `2.4` Beside the countdown, elapsed and planned time read **`8:27 / 20:00`** — the set's position, in the one `m:ss` format the screen uses throughout.
 
   <!-- req-gallery:2.4 -->
+  ![elapsed-and-planned.2.4](screen/cases/elapsed-and-planned.2.4.png)
   <!-- /req-gallery:2.4 -->
 - `2.5` With time in hand the countdown is bone-coloured and reads **`−11:33`**.
 
   <!-- req-gallery:2.5 -->
+  ![countdown-neutral.2.5](screen/cases/countdown-neutral.2.5.png)
   <!-- /req-gallery:2.5 -->
 - `2.6` Inside the last three minutes it turns orange.
 
   <!-- req-gallery:2.6 -->
+  ![countdown-warning.2.6](screen/cases/countdown-warning.2.6.png)
   <!-- /req-gallery:2.6 -->
   <details><summary>Notes</summary>
 
@@ -136,11 +142,13 @@ the slot, and that the set is being recorded.
 - `2.7` Once the slot is over it turns red and counts up, reading **`+1:00`** a minute over.
 
   <!-- req-gallery:2.7 -->
+  ![countdown-over.2.7](screen/cases/countdown-over.2.7.png)
   <!-- /req-gallery:2.7 -->
 - `2.8` The countdown is neutral above three minutes remaining, orange at three minutes or less, red once remaining time reaches zero.
 - `2.9` The pacing bar carries one segment per joke in set order, sized by estimated length, coloured told, live or queued.
 
   <!-- req-gallery:2.9 -->
+  ![pacing-bar.2.9](screen/cases/pacing-bar.2.9.png)
   <!-- /req-gallery:2.9 -->
 
 ## 3 — Stage mode: the current joke
@@ -150,6 +158,7 @@ The top region, and the largest thing on the screen: the words being performed.
 - `3.1` The joke being performed occupies the top region, its body text the largest text on the screen.
 
   <!-- req-gallery:3.1 -->
+  ![current-joke.3.1](screen/cases/current-joke.3.1.png)
   <!-- /req-gallery:3.1 -->
   <details><summary>Notes</summary>
 
@@ -160,10 +169,12 @@ The top region, and the largest thing on the screen: the words being performed.
 - `3.2` The current joke's title sits above its body, with the time it has been running so far — **`on 1:24`**.
 
   <!-- req-gallery:3.2 -->
+  ![joke-run-time.3.2](screen/cases/joke-run-time.3.2.png)
   <!-- /req-gallery:3.2 -->
 - `3.3` Crucial setups render highlighted inside the body: orange and bold, against the body's bone.
 
   <!-- req-gallery:3.3 -->
+  ![setup-highlight.3.3](screen/cases/setup-highlight.3.3.png)
   <!-- /req-gallery:3.3 -->
   <details><summary>Notes</summary>
 
@@ -175,10 +186,12 @@ The top region, and the largest thing on the screen: the words being performed.
 - `3.4` The joke's optional text renders under the body as bordered tags — alternate tags and delivery notes, with callbacks in green.
 
   <!-- req-gallery:3.4 -->
+  ![joke-optional-text.3.4](screen/cases/joke-optional-text.3.4.png)
   <!-- /req-gallery:3.4 -->
 - `3.5` Before the first card is tapped the region reads **`Tap a card to start`** and no card is live.
 
   <!-- req-gallery:3.5 -->
+  ![empty-stage.3.5](screen/cases/empty-stage.3.5.png)
   <!-- /req-gallery:3.5 -->
   <details><summary>Notes</summary>
 
@@ -188,10 +201,12 @@ The top region, and the largest thing on the screen: the words being performed.
 - `3.6` A laugh strip runs the width of the joke panel, lit green while the laugh level is above the speak-over threshold.
 
   <!-- req-gallery:3.6 -->
+  ![laugh-strip-lit.3.6](screen/cases/laugh-strip-lit.3.6.png)
   <!-- /req-gallery:3.6 -->
 - `3.7` Below the threshold the same strip is dim — it is safe to talk over.
 
   <!-- req-gallery:3.7 -->
+  ![laugh-strip-dim.3.7](screen/cases/laugh-strip-dim.3.7.png)
   <!-- /req-gallery:3.7 -->
 
 ## 4 — Stage mode: the set list
@@ -201,22 +216,27 @@ The bottom two thirds: nine large boxes, read at a glance from behind a mic.
 - `4.1` The set list renders as a 3-column grid of nine cards, each carrying its joke's title, filling the height the joke panel leaves.
 
   <!-- req-gallery:4.1 -->
+  ![set-list-grid.4.1](screen/cases/set-list-grid.4.1.png)
   <!-- /req-gallery:4.1 -->
 - `4.2` Told, live and queued cards are each coloured differently — green, orange, panel-dark.
 
   <!-- req-gallery:4.2 -->
+  ![card-states.4.2](screen/cases/card-states.4.2.png)
   <!-- /req-gallery:4.2 -->
 - `4.3` A key names the three states, in order: **`told`**, **`live`**, **`queued`**.
 
   <!-- req-gallery:4.3 -->
+  ![state-key.4.3](screen/cases/state-key.4.3.png)
   <!-- /req-gallery:4.3 -->
 - `4.4` The list header counts jokes started out of jokes planned: **`SET LIST · 4 / 9`**.
 
   <!-- req-gallery:4.4 -->
+  ![started-tally.4.4](screen/cases/started-tally.4.4.png)
   <!-- /req-gallery:4.4 -->
 - `4.5` Each card's footnote states its state in time: a told card its run time, the live card **`LIVE · 1:24`**, a queued card its estimate as **`~2:30`**.
 
   <!-- req-gallery:4.5 -->
+  ![card-footnotes.4.5](screen/cases/card-footnotes.4.5.png)
   <!-- /req-gallery:4.5 -->
   <details><summary>Notes</summary>
 
