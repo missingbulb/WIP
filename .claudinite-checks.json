@@ -55,7 +55,13 @@
   "taskScheduler": {
     "dailyHour": 4,
     "weeklyDay": "Sun",
-    "monthlyDay": 1
+    "monthlyDay": 1,
+    "endpoints": {
+      "default": {
+        "url": "https://api.anthropic.com/v1/claude_code/routines/trig_01GeRxAuz3y78ZqQYTRjtz87/fire",
+        "tokenSecret": "CLAUDINITE_INVOCATION_TOKEN"
+      }
+    }
   },
   "claudinite": {
     "updated": "2026-08-20T19:35:07.366Z",
