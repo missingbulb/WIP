@@ -21,6 +21,13 @@ Two things are generated and must never be hand-edited: each kind's
 manifest is what [`Runner.swift`](Runner.swift) executes) and the golden gallery
 embedded in `requirements.md`. Regenerate both with `--write`.
 
+Screen goldens are never written by hand or by a local run: the
+`refresh-goldens` workflow re-renders every one on a simulator and commits the
+result, so an intended UI change lands as PNGs in the diff for the owner to
+approve. Run it from the Actions tab, or put `[refresh goldens]` in the commit
+message of a push on the branch. It is never how a red case gets fixed — a
+render that changed unintentionally is a bug in the change.
+
 `gate/pending.json` is the burn-down list of leaves that are specified but not
 yet executable, each with the reason it cannot be. A leaf enters it only
 deliberately, carries the loud `⚠ TBD` marker in the spec, and leaves it when a

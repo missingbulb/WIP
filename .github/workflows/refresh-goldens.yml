@@ -5,6 +5,13 @@ name: Refresh goldens
 # changed unintentionally is a bug in the change, not in the golden.
 on:
   workflow_dispatch:
+  # `workflow_dispatch` only exists for workflows that are already on the
+  # default branch, so a branch that adds or changes a screen case cannot
+  # dispatch this one. The marker gives that branch a way in: put
+  # `[refresh goldens]` in the commit message of the push that should
+  # re-render.
+  push:
+    branches: ["**"]
 defaults:
   run:
     shell: bash
@@ -12,6 +19,7 @@ permissions:
   contents: write
 jobs:
   refresh:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[refresh goldens]')
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
