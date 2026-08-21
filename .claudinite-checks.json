@@ -59,7 +59,7 @@
     "endpoints": {
       "default": {
         "url": "https://api.anthropic.com/v1/claude_code/routines/trig_01GeRxAuz3y78ZqQYTRjtz87/fire",
-        "tokenSecret": "CLAUDINITE_INVOCATION_TOKEN"
+        "tokenSecret": "CCR_ROUTINE_TOKEN"
       }
     }
   },
