@@ -1,0 +1,45 @@
+{
+  "$comment": "Requirement leaves specified but not yet executable. A burn-down list tracked by https://github.com/missingbulb/WIP/issues/6 — it only shrinks. A leaf listed here must carry the loud TBD marker on its line in requirements.md, and must have no case; the coverage gate enforces both directions.",
+  "leaves": [
+    {
+      "id": "5.1",
+      "reason": "The screen kind's renderer cannot flatten a UIKit-backed control, so no golden can show the standard switch; a lookalike drawn in SwiftUI would pass the golden while breaking the requirement. Needs a kind that drives the real control."
+    },
+    {
+      "id": "6.5",
+      "reason": "Needs a real iPad: no fake can stand in for the audio session surviving a locked screen."
+    },
+    {
+      "id": "7.1",
+      "reason": "No case renders this screen yet — the Review module is not built. Claimed by a screen case when it is."
+    },
+    {
+      "id": "7.2",
+      "reason": "No case renders this screen yet — the Review module is not built. Claimed by a screen case when it is."
+    },
+    {
+      "id": "7.3",
+      "reason": "No case renders this screen yet — the Review module is not built. Claimed by a screen case when it is."
+    },
+    {
+      "id": "7.5",
+      "reason": "Needs the app shell wired end to end (consent flow, navigation, network posture); claimed once those exist."
+    },
+    {
+      "id": "8.1",
+      "reason": "Needs the app shell wired end to end (consent flow, navigation, network posture); claimed once those exist."
+    },
+    {
+      "id": "8.2",
+      "reason": "Needs the app shell wired end to end (consent flow, navigation, network posture); claimed once those exist."
+    },
+    {
+      "id": "8.3",
+      "reason": "Needs the app shell wired end to end (consent flow, navigation, network posture); claimed once those exist."
+    },
+    {
+      "id": "8.5",
+      "reason": "Needs the app shell wired end to end (consent flow, navigation, network posture); claimed once those exist."
+    }
+  ]
+}
