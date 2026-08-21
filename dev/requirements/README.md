@@ -29,6 +29,12 @@ message of a push on the branch. It works by dropping
 `screen/.refresh` beside the cases for the length of one run. It is never how a red case gets fixed — a
 render that changed unintentionally is a bug in the change.
 
+The goldens are pixel-exact, and what renders them is the simulator's iOS
+runtime — so a runner image that ships a new runtime can move every one of them
+at once. That shows up as the whole screen kind going red together, which is the
+tell: a real regression moves one or two. The fix is a refresh run and a look at
+the diff, not a tolerance.
+
 `gate/pending.json` is the burn-down list of leaves that are specified but not
 yet executable, each with the reason it cannot be. A leaf enters it only
 deliberately, carries the loud `⚠ TBD` marker in the spec, and leaves it when a

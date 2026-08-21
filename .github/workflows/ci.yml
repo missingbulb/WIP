@@ -66,7 +66,9 @@ jobs:
           udid=$(xcrun simctl list devices available --json \
             | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; print(next(x["udid"] for runtime in sorted(d) if "iOS" in runtime for x in d[runtime] if "iPad" in x["name"]))')
           echo "udid=$udid" >> "$GITHUB_OUTPUT"
-          xcrun simctl list devices available | grep -A0 "$udid"
+          # The runtime is what renders the goldens, so name it in the log: a
+          # whole screen kind going red at once usually means it moved.
+          xcrun simctl list devices available | grep -B99 "$udid" | grep -E "^-- |$udid"
       - name: Build the app and run every requirement kind
         working-directory: app
         run: |
