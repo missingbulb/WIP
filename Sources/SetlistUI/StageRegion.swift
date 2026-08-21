@@ -45,8 +45,14 @@ extension View {
     /// Publishes this view's bounds under `region`, so a snapshot can be
     /// cropped to it. Costs nothing at runtime — nothing in the app reads the
     /// preference.
+    ///
+    /// Transforms rather than sets: setting the preference would replace
+    /// whatever the view's children had already published, so a region drawn
+    /// around a panel would erase every region inside it.
     func stageRegion(_ region: StageRegion) -> some View {
-        anchorPreference(key: StageRegionBounds.self, value: .bounds) { [region: $0] }
+        transformAnchorPreference(key: StageRegionBounds.self, value: .bounds) { regions, anchor in
+            regions[region] = anchor
+        }
     }
 }
 
