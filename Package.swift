@@ -17,7 +17,7 @@ let package = Package(
             name: "SetlistRequirements",
             dependencies: ["SetlistCore"],
             path: "dev/requirements",
-            exclude: ["requirements.md", "gate"]
+            exclude: ["README.md", "requirements.md", "gate"]
         ),
     ]
 )

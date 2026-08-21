@@ -2,4 +2,4 @@ claudinite-rules.GENERATED.md merge=ours
 
 # Regenerated from cases/ by the coverage gate; a hand-resolved conflict would
 # desync it from the tree it lists.
-Manifest.GENERATED.swift merge=ours
+*Manifest.GENERATED.swift merge=ours
