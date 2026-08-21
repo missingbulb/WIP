@@ -86,6 +86,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: screen-failures
-          path: dev/requirements/screen/.failures/
+          path: dev/requirements/.failures/
           include-hidden-files: true
           if-no-files-found: ignore

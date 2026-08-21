@@ -12,54 +12,58 @@ let SCREEN_SIZE = CGSize(width: 834, height: 1112)
 /// environment variable: xcodebuild does not carry one into a hostless test
 /// bundle's process, and a refresh that silently did not happen is worse than
 /// no refresh at all.
-private var isRefreshing: Bool {
+var isRefreshingGoldens: Bool {
     FileManager.default.fileExists(atPath: REFRESH_MARKER.path)
 }
 
 private let REFRESH_MARKER = REPO_ROOT.appendingPathComponent("dev/requirements/screen/.refresh")
 
-private let failuresDirectory = REPO_ROOT.appendingPathComponent("dev/requirements/screen/.failures")
+private let failuresDirectory = REPO_ROOT.appendingPathComponent("dev/requirements/.failures")
 
 /// Renders `view` and compares it, pixel for pixel, with the committed golden.
 /// No tolerance: a tolerance is a standing invitation for unreviewed drift.
+/// `frame` numbers a saga's steps; a screen case leaves it nil and owns one
+/// golden named for its leaf alone.
 @MainActor
-func expectScreen<V: View>(_ view: V, slug: String, id: String) throws {
+func expectScreen<V: View>(_ view: V, slug: String, id: String, frame: Int? = nil) throws {
+    let name = frame.map { "\(slug).\(id).step-\(String(format: "%02d", $0))" } ?? "\(slug).\(id)"
+    let kind = frame == nil ? "screen" : "saga"
     let renderer = ImageRenderer(content: view.frame(width: SCREEN_SIZE.width, height: SCREEN_SIZE.height))
     renderer.scale = 1
     guard let rendered = renderer.uiImage, let actual = rendered.cgImage else {
-        throw RequirementFailure(description: "\(slug).\(id): the view did not render")
+        throw RequirementFailure(description: "\(name): the view did not render")
     }
 
-    let golden = REPO_ROOT.appendingPathComponent("dev/requirements/screen/cases/\(slug).\(id).png")
-    if isRefreshing {
+    let golden = REPO_ROOT.appendingPathComponent("dev/requirements/\(kind)/cases/\(name).png")
+    if isRefreshingGoldens {
         guard let data = rendered.pngData() else {
-            throw RequirementFailure(description: "\(slug).\(id): the render did not encode")
+            throw RequirementFailure(description: "\(name): the render did not encode")
         }
         try data.write(to: golden)
         return
     }
 
     guard let expectedImage = UIImage(contentsOfFile: golden.path)?.cgImage else {
-        try write(rendered, named: "\(slug).\(id).actual.png")
+        try write(rendered, named: "\(name).actual.png")
         throw RequirementFailure(
-            description: "\(slug).\(id): no committed golden. The render is in screen/.failures/ — approve it by refreshing."
+            description: "\(name): no committed golden. The render is in .failures/ — approve it by refreshing."
         )
     }
 
     let actualPixels = try pixels(of: actual)
     let expectedPixels = try pixels(of: expectedImage)
     guard actual.width == expectedImage.width, actual.height == expectedImage.height else {
-        try write(rendered, named: "\(slug).\(id).actual.png")
+        try write(rendered, named: "\(name).actual.png")
         throw RequirementFailure(
-            description: "\(slug).\(id): rendered \(actual.width)×\(actual.height), golden is \(expectedImage.width)×\(expectedImage.height)"
+            description: "\(name): rendered \(actual.width)×\(actual.height), golden is \(expectedImage.width)×\(expectedImage.height)"
         )
     }
     guard actualPixels != expectedPixels else { return }
 
     let differing = zip(actualPixels, expectedPixels).reduce(into: 0) { $0 += ($1.0 == $1.1 ? 0 : 1) } / 4
-    try write(rendered, named: "\(slug).\(id).actual.png")
+    try write(rendered, named: "\(name).actual.png")
     throw RequirementFailure(
-        description: "\(slug).\(id): \(differing) pixels differ from the golden. The render is in screen/.failures/."
+        description: "\(name): \(differing) pixels differ from the golden. The render is in .failures/."
     )
 }
 

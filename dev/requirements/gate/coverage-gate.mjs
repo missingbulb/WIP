@@ -21,7 +21,9 @@ const PENDING = join(GATE_DIR, 'pending.json');
 const ID_LINE = /^\s*(?:-\s+)?`(\d+(?:\.\d+)+)`/gm;
 const CASE_FILE = new RegExp(`^([a-z0-9]+(?:-[a-z0-9]+)*)\\.(\\d+(?:\\.\\d+)+)\\.case\\.${CASE_EXT}$`);
 const TBD = '⚠ TBD';
-const GALLERY_MARK = '<!-- gallery:';
+const GALLERY_OPEN = (id) => `<!-- req-gallery:${id} -->`;
+const GALLERY_CLOSE = (id) => `<!-- /req-gallery:${id} -->`;
+const GALLERY_ANY = /^\s*<!-- \/?req-gallery:/;
 
 const write = process.argv.includes('--write');
 const failures = [];
@@ -84,6 +86,7 @@ for (const kind of KINDS) {
   for (const file of files) {
     if (file.startsWith('.')) continue; // .gitkeep holds an as-yet-empty kind open
     if (file.endsWith(`.${GOLDEN_EXT}`)) continue; // goldens are checked below
+    if (file.endsWith('.captions.json')) continue; // a saga's captions, generated beside its frames
     const m = CASE_FILE.exec(file);
     if (!m) {
       fail(`kinds: \`${kind.id}/cases/${file}\` is not named <slug>.<leaf-id>.case.${CASE_EXT}`);
@@ -112,6 +115,19 @@ for (const kind of KINDS) {
       for (const c of cases) {
         if (!goldens.some((g) => g.startsWith(`${c.slug}.${c.id}`))) {
           fail(`kinds: \`${kind.id}/cases/${c.file}\` is an image-kind case with no committed golden`);
+        }
+        if (!kind.frames) continue;
+        // A story with no caption is a slideshow: the frames only narrate
+        // anything while the captions stay in step with them.
+        const captionsPath = join(casesDir, `${c.slug}.${c.id}.captions.json`);
+        if (!existsSync(captionsPath)) {
+          fail(`kinds: \`${kind.id}/cases/${c.file}\` has no committed captions`);
+          continue;
+        }
+        const captions = JSON.parse(readFileSync(captionsPath, 'utf8'));
+        const frames = goldens.filter((g) => g.startsWith(`${c.slug}.${c.id}.step-`));
+        if (captions.length !== frames.length) {
+          fail(`kinds: \`${c.slug}.${c.id}\` has ${frames.length} frames and ${captions.length} captions`);
         }
       }
     }
@@ -144,25 +160,51 @@ for (const leaf of leaves) {
 }
 
 // ------------------------------------------------------------- the gallery
-// Under every image-kind leaf, the committed goldens embed as machine-managed
-// lines; the doc is the owner's gallery of what the product actually renders.
-const galleryLines = new Map();
+// The picture under a leaf IS its expected rendering, so the spec doubles as
+// the gallery of what the product actually shows: approving the spec is
+// approving the pixels. Everything between a leaf's gallery markers is written
+// here and nowhere else.
+const galleryBlocks = new Map();
 for (const kind of KINDS.filter((k) => k.images)) {
   const casesDir = join(ROOT, kind.dir, 'cases');
   if (!existsSync(casesDir)) continue;
+  const files = readdirSync(casesDir).sort();
   for (const [id, claim] of claims) {
     if (!claim.startsWith(`${kind.id}/`)) continue;
     const stem = claim.slice(`${kind.id}/cases/`.length).replace(`.case.${CASE_EXT}`, '');
-    const shots = readdirSync(casesDir).filter((f) => f.startsWith(stem) && f.endsWith(`.${GOLDEN_EXT}`)).sort();
-    galleryLines.set(id, shots.map((s) => `${GALLERY_MARK}${id} --> ![${id}](${kind.dir}/cases/${s})`));
+    const shots = files.filter((f) => f.startsWith(`${stem}.`) && f.endsWith(`.${GOLDEN_EXT}`)).sort();
+    const lines = [`  ${GALLERY_OPEN(id)}`];
+    if (kind.frames) {
+      const captionsPath = join(casesDir, `${stem}.captions.json`);
+      const captions = existsSync(captionsPath) ? JSON.parse(readFileSync(captionsPath, 'utf8')) : [];
+      shots.forEach((shot, index) => {
+        lines.push(`  ${index + 1}. **${captions[index] ?? ''}**`, '');
+        lines.push(`     ![${stem} step ${index + 1}](${kind.dir}/cases/${shot})`, '');
+      });
+      if (lines.at(-1) === '') lines.pop();
+    } else {
+      for (const shot of shots) lines.push(`  ![${stem}](${kind.dir}/cases/${shot})`);
+    }
+    lines.push(`  ${GALLERY_CLOSE(id)}`);
+    galleryBlocks.set(id, lines);
   }
 }
+
 const rebuilt = [];
-for (const [i, line] of specLines.entries()) {
-  if (line.startsWith(GALLERY_MARK)) continue; // regenerated below
+let insideGallery = false;
+for (const line of specLines) {
+  if (GALLERY_ANY.test(line)) {
+    insideGallery = line.includes('<!-- req-gallery:');
+    // The blank line that separated the leaf from its old block is part of the
+    // block: leaving it behind would grow one blank per regeneration and the
+    // generator would never reach a fixed point.
+    if (insideGallery) while (rebuilt.at(-1) === '') rebuilt.pop();
+    continue;
+  }
+  if (insideGallery) continue; // regenerated below
   rebuilt.push(line);
   const m = /^\s*(?:-\s+)?`(\d+(?:\.\d+)+)`/.exec(line);
-  if (m && galleryLines.has(m[1])) rebuilt.push(...galleryLines.get(m[1]));
+  if (m && galleryBlocks.has(m[1])) rebuilt.push('', ...galleryBlocks.get(m[1]));
 }
 compare(SPEC, `${rebuilt.join('\n').replace(/\n+$/, '')}\n`, 'gallery: requirements.md does not match the generator — run the gate with --write');
 

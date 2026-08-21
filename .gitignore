@@ -4,7 +4,7 @@
 /app/Setlist.xcodeproj/
 /app/DerivedData/
 # Failure artifacts from a red requirement case never sit beside the goldens.
-/dev/requirements/**/.failures/
+/dev/requirements/.failures/
 # The refresh workflow's marker, never committed.
 /dev/requirements/screen/.refresh
 .DS_Store

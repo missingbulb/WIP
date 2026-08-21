@@ -7,6 +7,7 @@ final class RequirementsTests: XCTestCase {
     func testLogicRequirements() { run(LogicManifest.cases) }
     func testBehaviorRequirements() { run(BehaviorManifest.cases) }
     func testScreenRequirements() { run(ScreenManifest.cases) }
+    func testSagaRequirements() { run(SagaManifest.cases) }
 
     private func run(_ cases: [RequirementCase]) {
         for requirement in cases {

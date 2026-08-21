@@ -13,6 +13,18 @@ export const KINDS = [
     platform: '#if canImport(SwiftUI) && os(iOS)',
   },
   {
+    id: 'saga',
+    dir: 'saga',
+    // A multi-step story: one captioned frame per step, so the gallery shows
+    // what arriving, tapping or time passing changes. Frames are numbered
+    // `<slug>.<id>.step-NN.png`; the captions ride beside them as generated
+    // JSON, because a caption list hand-maintained in Markdown drifts from the
+    // frames it labels.
+    images: true,
+    frames: true,
+    platform: '#if canImport(SwiftUI) && os(iOS)',
+  },
+  {
     id: 'behavior',
     dir: 'behavior',
     // A driven gesture and the consequence it produces against the fakes'

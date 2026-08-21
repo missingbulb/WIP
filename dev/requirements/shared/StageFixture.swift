@@ -41,6 +41,16 @@ enum StageFixture {
         return model
     }
 
+    /// The set as it stands before the comedian taps anything: everything
+    /// queued, the recording already running.
+    static func beforeTheFirstTap() -> StageState {
+        StageState(
+            model: StageModel(jokes: jokes, plannedLength: 1200),
+            venue: "The Stand · Fri late",
+            elapsed: 0
+        )
+    }
+
     static func state(elapsed: TimeInterval = 507, laughLevel: Double = 0) -> StageState {
         StageState(
             model: midShow(),
@@ -48,6 +58,15 @@ enum StageFixture {
             elapsed: elapsed,
             laughLevel: laughLevel
         )
+    }
+}
+
+/// Driving the fixture forward, for the sagas: a card tap at a moment on the
+/// capture clock. Test-side only — the app drives the same model through the
+/// stage screen's own callbacks.
+extension StageState {
+    mutating func tap(_ joke: Joke, at seconds: TimeInterval) {
+        model.tapCard(jokeID: joke.id, at: CaptureTime(seconds))
     }
 }
 #endif

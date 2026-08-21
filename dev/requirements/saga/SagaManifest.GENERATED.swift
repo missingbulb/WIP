@@ -2,12 +2,12 @@
 // Swift cannot discover case files at runtime, so this list is what the runner
 // executes; the gate fails when it and cases/ disagree.
 
-enum BehaviorManifest {
+enum SagaManifest {
+#if canImport(SwiftUI) && os(iOS)
     static let cases: [RequirementCase] = [
-        continuousRecording_6_1,
-        interruptionResumes_6_6,
-        librarySurvivesRelaunch_1_6,
-        recordingLocation_6_2,
-        tapOnCaptureClock_5_6,
+        workingTheSet_9_1,
     ]
+#else
+    static let cases: [RequirementCase] = []
+#endif
 }

@@ -5,16 +5,26 @@
 enum ScreenManifest {
 #if canImport(SwiftUI) && os(iOS)
     static let cases: [RequirementCase] = [
-        cardStates_2_6,
-        countdownHeader_2_8,
-        currentJoke_2_2,
-        jokeOptionalText_2_4,
-        laughStrip_2_14,
+        cardFootnotes_4_5,
+        cardStates_4_2,
+        countdownNeutral_2_5,
+        countdownOver_2_7,
+        countdownWarning_2_6,
+        currentJoke_3_1,
+        elapsedAndPlanned_2_4,
+        emptyStage_3_5,
+        jokeOptionalText_3_4,
+        jokeRunTime_3_2,
+        laughStripDim_3_7,
+        laughStripLit_3_6,
         oneScreen_2_1,
-        pacingBar_2_10,
-        recordingIndicator_2_11,
-        setListGrid_2_5,
-        setupHighlight_2_3,
+        pacingBar_2_9,
+        recordingIndicator_2_2,
+        setListGrid_4_1,
+        setupHighlight_3_3,
+        startedTally_4_4,
+        stateKey_4_3,
+        venueLine_2_3,
     ]
 #else
     static let cases: [RequirementCase] = []
