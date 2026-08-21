@@ -85,4 +85,5 @@ jobs:
         with:
           name: screen-failures
           path: dev/requirements/screen/.failures/
+          include-hidden-files: true
           if-no-files-found: ignore

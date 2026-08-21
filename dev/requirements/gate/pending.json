@@ -2,44 +2,8 @@
   "$comment": "Requirement leaves specified but not yet executable. A burn-down list tracked by https://github.com/missingbulb/WIP/issues/6 — it only shrinks. A leaf listed here must carry the loud TBD marker on its line in requirements.md, and must have no case; the coverage gate enforces both directions.",
   "leaves": [
     {
-      "id": "2.1",
-      "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
-    },
-    {
-      "id": "2.2",
-      "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
-    },
-    {
-      "id": "2.3",
-      "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
-    },
-    {
-      "id": "2.4",
-      "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
-    },
-    {
-      "id": "2.6",
-      "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
-    },
-    {
-      "id": "2.8",
-      "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
-    },
-    {
-      "id": "2.10",
-      "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
-    },
-    {
-      "id": "2.11",
-      "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
-    },
-    {
       "id": "2.12",
-      "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
-    },
-    {
-      "id": "2.14",
-      "reason": "No screen kind yet: rendering a SwiftUI view to a byte-stable golden needs the simulator lane, which is not built. Claimed by a screen case when that lane lands."
+      "reason": "The screen kind's renderer cannot flatten a UIKit-backed control, so no golden can show the standard switch; a lookalike drawn in SwiftUI would pass the golden while breaking the requirement. Needs a kind that drives the real control."
     },
     {
       "id": "4.5",
