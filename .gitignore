@@ -1,2 +1,8 @@
 /.claudinite-hooks.log
 /.claudinite-hooks.log.tmp
+/.build/
+/app/Setlist.xcodeproj/
+/app/DerivedData/
+# Failure artifacts from a red requirement case never sit beside the goldens.
+/dev/requirements/**/.failures/
+.DS_Store

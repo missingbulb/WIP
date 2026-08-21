@@ -22,3 +22,49 @@ jobs:
         run: node .claudinite/shared/engine/checks/check_the_world.mjs
       - name: Conformance sweep (work scope)
         run: node .claudinite/shared/engine/checks/ci-work-scope.mjs --branch "${{ github.head_ref || github.ref_name }}"
+
+  requirements-gate:
+    name: Coverage gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Every requirement leaf is claimed exactly once
+        run: node dev/requirements/gate/coverage-gate.mjs
+
+  requirements:
+    name: Executable requirements
+    runs-on: ubuntu-latest
+    # The requirement cases run against SetlistCore, which is platform-
+    # independent; the app shell and any simulator-rendered kind build in the
+    # `app` job below.
+    container: swift:6.0-noble
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - run: swift test
+
+  app:
+    name: iPad app build
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - run: brew install xcodegen
+      - name: Generate the Xcode project
+        working-directory: app
+        run: xcodegen generate
+      - name: Build for the simulator
+        working-directory: app
+        run: |
+          xcodebuild build \
+            -project Setlist.xcodeproj \
+            -scheme Setlist \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO
