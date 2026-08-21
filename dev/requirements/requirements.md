@@ -50,11 +50,17 @@ The live screen, portrait, as drawn in mockup 1. Every leaf here is a resting
 state an owner checks by sight.
 
 - `2.1` The stage screen fills one portrait iPad screen at 3:4 with no scrolling region.
+<!-- gallery:2.1 --> ![2.1](screen/cases/one-screen.2.1.png)
 - `2.2` The current joke occupies the top region, its body text the largest text on the screen.
+<!-- gallery:2.2 --> ![2.2](screen/cases/current-joke.2.2.png)
 - `2.3` Crucial setups render highlighted inside the current joke's body.
+<!-- gallery:2.3 --> ![2.3](screen/cases/setup-highlight.2.3.png)
 - `2.4` The current joke's optional text — alternate tags, callbacks, delivery notes — renders below the body as tags, callbacks distinguished from plain tags.
+<!-- gallery:2.4 --> ![2.4](screen/cases/joke-optional-text.2.4.png)
 - `2.5` The set list renders as a 3-column grid of nine cards, each card carrying its joke's title.
+<!-- gallery:2.5 --> ![2.5](screen/cases/set-list-grid.2.5.png)
 - `2.6` Told, live and queued cards are each coloured differently, with a key naming the three states.
+<!-- gallery:2.6 --> ![2.6](screen/cases/card-states.2.6.png)
 - `2.7` No stage-mode card carries a laugh count or laugh score.
   <details><summary>Owner requirement, asserted as a rule not a picture</summary>
 
@@ -65,9 +71,12 @@ state an owner checks by sight.
   no card field carries laugh data.
   </details>
 - `2.8` The countdown is subordinate to the joke text and shows remaining time, elapsed time and the set's planned length.
+<!-- gallery:2.8 --> ![2.8](screen/cases/countdown-header.2.8.png)
 - `2.9` The countdown's colour is neutral while more than three minutes remain, orange at three minutes or less, red once remaining time reaches zero, after which it counts up as a negative.
 - `2.10` The pacing bar carries one segment per joke in set order, sized by estimated length, marked told, live or queued.
+<!-- gallery:2.10 --> ![2.10](screen/cases/pacing-bar.2.10.png)
 - `2.11` A recording indicator is visible in the header whenever capture is running.
+<!-- gallery:2.11 --> ![2.11](screen/cases/recording-indicator.2.11.png)
 - `2.12` ⚠ TBD The segment-mode control is a standard iOS switch labelled "Manual switch" when off and "Autodetect bits" when on, with no explanatory text beside it.
   <details><summary>Why a golden cannot see this one</summary>
 
@@ -88,6 +97,7 @@ state an owner checks by sight.
   registers, with no view change.
   </details>
 - `2.14` A laugh strip runs under the current joke, lit while the live laugh level is above the speak-over threshold and dim below it.
+<!-- gallery:2.14 --> ![2.14](screen/cases/laugh-strip.2.14.png)
 
 ## 3 — Stage mode, driven
 
