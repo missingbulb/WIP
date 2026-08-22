@@ -3,11 +3,23 @@
   "leaves": [
     {
       "id": "5.1",
-      "reason": "The screen kind's renderer cannot flatten a UIKit-backed control, so no golden can show the standard switch; a lookalike drawn in SwiftUI would pass the golden while breaking the requirement. Needs a kind that drives the real control."
+      "reason": "The screen kind's renderer cannot flatten a platform-backed control, so no golden can show the standard switch; a lookalike would pass the golden while breaking the requirement. Needs a renderer that draws the control itself rather than embedding a platform one."
     },
     {
       "id": "6.5",
-      "reason": "Needs a real iPad: no fake can stand in for the audio session surviving a locked screen."
+      "reason": "Needs real hardware: no fake can stand in for the audio session surviving a locked screen."
+    },
+    {
+      "id": "6.7",
+      "reason": "Asserts an absence across the capture module and the analysis pass; the pass does not exist yet. Claimed once the detection module is authored."
+    },
+    {
+      "id": "6.8",
+      "reason": "Needs the detection module and a committed recording to run it against; the threshold and minimum duration are approved on that recording."
+    },
+    {
+      "id": "6.9",
+      "reason": "Determinism is asserted by running the detection module twice over the same committed recording; neither exists yet."
     },
     {
       "id": "7.1",
@@ -40,6 +52,10 @@
     {
       "id": "8.5",
       "reason": "Needs the app shell wired end to end (consent flow, navigation, network posture); claimed once those exist."
+    },
+    {
+      "id": "8.6",
+      "reason": "Needs an Android manifest to read; there is no Android app shell yet."
     }
   ]
 }

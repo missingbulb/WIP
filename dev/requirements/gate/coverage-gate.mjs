@@ -24,6 +24,12 @@ const TBD = '⚠ TBD';
 const GALLERY_OPEN = (id) => `<!-- req-gallery:${id} -->`;
 const GALLERY_CLOSE = (id) => `<!-- /req-gallery:${id} -->`;
 const GALLERY_ANY = /^\s*<!-- \/?req-gallery:/;
+// A whole-screen render is a page-tall image; inlining it under its leaf pushes
+// the numbered spine off the screen. Those blocks collect in one section at the
+// foot of the doc instead, and the leaf keeps a generated link to it.
+const FULL_OPEN = '<!-- req-gallery-full -->';
+const FULL_CLOSE = '<!-- /req-gallery-full -->';
+const FULL_ANCHOR = '#full-screen-renders';
 
 const write = process.argv.includes('--write');
 const failures = [];
@@ -70,6 +76,7 @@ for (const entry of readdirSync(ROOT, { withFileTypes: true })) {
 }
 
 const claims = new Map(); // leaf id -> "kind/file"
+const wholeScreenIds = new Set(); // leaves whose picture is the whole screen
 for (const kind of KINDS) {
   const kindDir = join(ROOT, kind.dir);
   if (!existsSync(kindDir) || !statSync(kindDir).isDirectory()) {
@@ -122,6 +129,9 @@ for (const kind of KINDS) {
           // in a green run — the case still passes, it just proves less. So the
           // capture's scope is declared, one way or the other.
           const source = readFileSync(join(casesDir, c.file), 'utf8');
+          // The same declaration that justifies the scope also places the
+          // picture: whole-screen renders gallery at the foot of the doc.
+          if (/\/\/ whole-screen: \S/.test(source)) wholeScreenIds.add(c.id);
           if (!/\bregion: \./.test(source) && !/\/\/ whole-screen: \S/.test(source)) {
             fail(
               `kinds: \`${kind.id}/cases/${c.file}\` names no region — crop to the element the leaf is about, ` +
@@ -178,6 +188,7 @@ for (const leaf of leaves) {
 // approving the pixels. Everything between a leaf's gallery markers is written
 // here and nowhere else.
 const galleryBlocks = new Map();
+const fullBlocks = new Map();
 for (const kind of KINDS.filter((k) => k.images)) {
   const casesDir = join(ROOT, kind.dir, 'cases');
   if (!existsSync(casesDir)) continue;
@@ -199,13 +210,47 @@ for (const kind of KINDS.filter((k) => k.images)) {
       for (const shot of shots) lines.push(`  ![${stem}](${kind.dir}/cases/${shot})`);
     }
     lines.push(`  ${GALLERY_CLOSE(id)}`);
-    galleryBlocks.set(id, lines);
+    if (wholeScreenIds.has(id)) {
+      // The leaf keeps a marker so every image-kind leaf still carries a
+      // generated block; what it carries is the way to the picture.
+      galleryBlocks.set(id, [
+        `  ${GALLERY_OPEN(id)}`,
+        `  [Full-screen render →](${FULL_ANCHOR})`,
+        `  ${GALLERY_CLOSE(id)}`,
+      ]);
+      fullBlocks.set(id, { stem, shots: shots.map((shot) => `${kind.dir}/cases/${shot}`) });
+    } else {
+      galleryBlocks.set(id, lines);
+    }
   }
 }
 
+// The foot-of-doc section, in leaf order — every whole-screen render, each
+// under its own id so the link from the leaf lands somewhere named.
+const fullSection = [FULL_OPEN];
+for (const id of [...fullBlocks.keys()].sort(byLeafId)) {
+  const { stem, shots } = fullBlocks.get(id);
+  fullSection.push('', `### \`${id}\` — ${stem.replace(/\.\d+(?:\.\d+)*$/, '')}`, '');
+  for (const shot of shots) fullSection.push(`![${stem}](${shot})`);
+}
+fullSection.push('', FULL_CLOSE);
+
 const rebuilt = [];
 let insideGallery = false;
+let insideFull = false;
+let sawFullSection = false;
 for (const line of specLines) {
+  if (line.trim() === FULL_OPEN) {
+    insideFull = true;
+    sawFullSection = true;
+    while (rebuilt.at(-1) === '') rebuilt.pop();
+    rebuilt.push('', ...fullSection);
+    continue;
+  }
+  if (insideFull) {
+    if (line.trim() === FULL_CLOSE) insideFull = false;
+    continue;
+  }
   if (GALLERY_ANY.test(line)) {
     insideGallery = line.includes('<!-- req-gallery:');
     // The blank line that separated the leaf from its old block is part of the
@@ -219,7 +264,20 @@ for (const line of specLines) {
   const m = /^\s*(?:-\s+)?`(\d+(?:\.\d+)+)`/.exec(line);
   if (m && galleryBlocks.has(m[1])) rebuilt.push('', ...galleryBlocks.get(m[1]));
 }
+if (!sawFullSection && fullBlocks.size) {
+  fail(`gallery: requirements.md carries no ${FULL_OPEN} section for its whole-screen renders`);
+}
 compare(SPEC, `${rebuilt.join('\n').replace(/\n+$/, '')}\n`, 'gallery: requirements.md does not match the generator — run the gate with --write');
+
+// Leaf ids sort by their numbers, never as text: `4.10` follows `4.9`.
+function byLeafId(a, b) {
+  const l = a.split('.').map(Number);
+  const r = b.split('.').map(Number);
+  for (let i = 0; i < Math.max(l.length, r.length); i += 1) {
+    if ((l[i] ?? 0) !== (r[i] ?? 0)) return (l[i] ?? 0) - (r[i] ?? 0);
+  }
+  return 0;
+}
 
 // ---------------------------------------------------------------- reporting
 if (failures.length) {
