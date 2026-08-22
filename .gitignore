@@ -8,3 +8,9 @@
 # The refresh workflow's marker, never committed.
 /dev/requirements/screen/.refresh
 .DS_Store
+
+# Dart/Flutter build state. The SDK version itself is pinned in
+# .flutter-version, because a golden rendered by one Flutter version is not
+# portable to another (risk R6).
+.dart_tool/
+build/
