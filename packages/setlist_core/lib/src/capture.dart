@@ -1,3 +1,5 @@
+import 'ids.dart';
+
 /// Seconds since the capture session started, read off a monotonic source.
 ///
 /// Card taps and laugh events are both stamped with one, so their interleaving
@@ -72,4 +74,34 @@ List<CaptureTimed> timeline({
     return a.$1.compareTo(b.$1);
   });
   return [for (final entry in indexed) entry.$2];
+}
+
+/// How a segment's boundary was decided.
+///
+/// Kept because Phase B proposes boundaries a comedian never tapped, and a
+/// boundary the app guessed is not the same fact as one the comedian marked.
+enum SegmentProvenance { manual, detected }
+
+/// A span of a show's recording bound to a joke.
+///
+/// [end] is absent while the segment is still open — absent, never a zero,
+/// which would read as a bit that took no time.
+class Segment {
+  Segment({
+    String? id,
+    required this.jokeId,
+    required this.start,
+    this.end,
+    required this.provenance,
+  }) : id = id ?? newId();
+
+  final String id;
+  final String jokeId;
+  final CaptureTime start;
+  CaptureTime? end;
+  final SegmentProvenance provenance;
+
+  Duration? get duration => end == null
+      ? null
+      : Duration(microseconds: ((end!.seconds - start.seconds) * 1e6).round());
 }
