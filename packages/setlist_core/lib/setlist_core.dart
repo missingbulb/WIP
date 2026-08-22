@@ -9,6 +9,7 @@
 library setlist_core;
 
 export 'src/capture.dart';
+export 'src/detect.dart';
 export 'src/ids.dart';
 export 'src/library_store.dart';
 export 'src/material.dart';
