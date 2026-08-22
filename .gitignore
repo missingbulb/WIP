@@ -5,6 +5,8 @@
 /app/DerivedData/
 # Failure artifacts from a red requirement case never sit beside the goldens.
 /dev/requirements/.failures/
+# The Flutter harness writes its actual/expected/diff renders here.
+test/failures/
 # The refresh workflow's marker, never committed.
 /dev/requirements/screen/.refresh
 .DS_Store
