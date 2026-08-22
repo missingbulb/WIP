@@ -49,6 +49,33 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - run: swift test
 
+  dart:
+    name: Dart packages
+    runs-on: ubuntu-latest
+    # The Flutter half of the conversion (#40). It runs beside the Swift lanes
+    # rather than replacing them: both trees are live until the Swift one is
+    # deleted, and `main` stays green throughout.
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: subosito/flutter-action@v2
+        with:
+          # Pinned, not "stable": a renderer change moves every golden at once,
+          # which reads as the whole screen kind regressing (risk R6).
+          flutter-version-file: .flutter-version
+          channel: stable
+      - name: The core, on the Dart VM
+        working-directory: packages/setlist_core
+        run: |
+          dart pub get
+          dart test
+      - name: The screens, in the Flutter test renderer
+        working-directory: packages/setlist_ui
+        run: |
+          flutter pub get
+          flutter test
+
   app:
     name: iPad app and screen requirements
     runs-on: macos-15
