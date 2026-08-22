@@ -1,0 +1,13 @@
+name: setlist_core
+description: >-
+  The product's platform-independent core — material, the stage state machine,
+  the capture timeline, review analytics and laugh detection. Pure Dart, so it
+  runs anywhere the tests do.
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ^3.13.0
+
+dev_dependencies:
+  test: ^1.25.0

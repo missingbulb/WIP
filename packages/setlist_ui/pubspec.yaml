@@ -1,0 +1,29 @@
+name: setlist_ui
+description: The product's screens, and the fonts they are rendered with.
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  setlist_core:
+    path: ../setlist_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  fonts:
+    # Bundled rather than named-and-hoped-for: a golden is only an approval
+    # record if the glyphs it was approved with are the glyphs it renders with,
+    # on every machine. The test harness loads these same files, so what CI
+    # compares is what the product draws.
+    - family: DejaVuSans
+      fonts:
+        - asset: fonts/DejaVuSans.ttf
+        - asset: fonts/DejaVuSans-Bold.ttf
+          weight: 700
