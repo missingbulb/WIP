@@ -77,14 +77,19 @@ class StageScreen extends StatelessWidget {
           color: Palette.bone,
           fontSize: 15,
         ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _header(),
-              _currentJoke(),
-              _segmentModeRow(),
-              Expanded(child: _setListGrid()),
-            ],
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final narrow = constraints.maxWidth < narrowWidth;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _header(),
+                  _currentJoke(narrow: narrow, available: constraints.maxHeight),
+                  _segmentModeRow(),
+                  Expanded(child: _setListGrid(narrow: narrow)),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -223,11 +228,26 @@ class StageScreen extends StatelessWidget {
 
   // ---------------------------------------------------------- current joke
 
-  Widget _currentJoke() {
+  static Widget _flexIf(bool flex, Widget child) =>
+      flex ? Flexible(child: child) : child;
+
+  /// The share of the screen the joke panel may take before the set list
+  /// starts losing cards it cannot afford to lose.
+  ///
+  /// Only applied on a narrow screen. A phone cannot show the whole body *and*
+  /// nine readable cards, so the body is what gives: a comedian mid-bit is
+  /// reading the top of it, and the grid is what they navigate by.
+  static const double narrowPanelShare = 0.34;
+
+  Widget _currentJoke({required bool narrow, required double available}) {
     final card = state.liveCard;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: Container(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: narrow ? available * narrowPanelShare : double.infinity,
+        ),
+        child: Container(
         key: StageRegion.currentJoke.key,
         width: double.infinity,
         color: Palette.panel,
@@ -267,10 +287,18 @@ class StageScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 14),
-                    Text.rich(
-                      jokeBody(card.joke),
-                      key: StageRegion.jokeBody.key,
-                      style: const TextStyle(fontSize: 25, height: 1.36),
+                    // Flexible only where there is a bound to flex within: on
+                    // a wide screen the panel is unbounded, and a flex child in
+                    // an unbounded column is a layout error rather than a
+                    // shrink-wrap.
+                    _flexIf(
+                      narrow,
+                      Text.rich(
+                        jokeBody(card.joke),
+                        key: StageRegion.jokeBody.key,
+                        overflow: narrow ? TextOverflow.ellipsis : TextOverflow.clip,
+                        style: const TextStyle(fontSize: 25, height: 1.36),
+                      ),
                     ),
                     if (card.joke.tags.isNotEmpty || card.joke.callbacks.isNotEmpty) ...[
                       const SizedBox(height: 14),
@@ -288,6 +316,7 @@ class StageScreen extends StatelessWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );
@@ -397,7 +426,7 @@ class StageScreen extends StatelessWidget {
 
   // -------------------------------------------------------------- set list
 
-  Widget _setListGrid() {
+  Widget _setListGrid({required bool narrow}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
       child: Column(
@@ -432,16 +461,16 @@ class StageScreen extends StatelessWidget {
             child: Column(
               key: StageRegion.grid.key,
               children: [
-                for (var r = 0; r < _rows.length; r++) ...[
+                for (var r = 0; r < _rowsOf(narrow ? 2 : 3).length; r++) ...[
                   if (r > 0) const SizedBox(height: 9),
                   Expanded(
                     child: Row(
                       children: [
-                        for (var c = 0; c < 3; c++) ...[
+                        for (var c = 0; c < (narrow ? 2 : 3); c++) ...[
                           if (c > 0) const SizedBox(width: 9),
                           Expanded(
-                            child: c < _rows[r].length
-                                ? _cardFace(_rows[r][c])
+                            child: c < _rowsOf(narrow ? 2 : 3)[r].length
+                                ? _cardFace(_rowsOf(narrow ? 2 : 3)[r][c])
                                 : const SizedBox.shrink(),
                           ),
                         ],
@@ -457,11 +486,18 @@ class StageScreen extends StatelessWidget {
     );
   }
 
-  List<List<StageCard>> get _rows {
+  /// The width below which the set list drops to two columns.
+  ///
+  /// Three cards across a phone leaves each about 120pt, which clips a title
+  /// like "Flatmate rota" to five characters, and a card nobody can read is
+  /// worse than a taller grid.
+  static const double narrowWidth = 600;
+
+  List<List<StageCard>> _rowsOf(int columns) {
     final cards = state.model.cards;
     return [
-      for (var start = 0; start < cards.length; start += 3)
-        cards.sublist(start, start + 3 > cards.length ? cards.length : start + 3),
+      for (var start = 0; start < cards.length; start += columns)
+        cards.sublist(start, start + columns > cards.length ? cards.length : start + columns),
     ];
   }
 
@@ -490,6 +526,12 @@ class StageScreen extends StatelessWidget {
             Expanded(
               child: Text(
                 card.joke.title,
+                // Wraps and then ellipsises rather than cutting mid-word: a
+                // title that reads "Flatmate" is a different bit from one that
+                // reads "Flatmate rota", and the comedian is scanning for the
+                // one they mean.
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
