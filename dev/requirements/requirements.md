@@ -1,7 +1,7 @@
 # Set list — executable requirements
 
-The numbered spec for the Set list iPad app: what each surface must render,
-how it must behave, the exact copy it carries. Every leaf — a numbered line
+The numbered spec for the Set list app: what each surface must render, how it
+must behave, the exact copy it carries. Every leaf — a numbered line
 with no finer-numbered child — is claimed by **exactly one** case under this
 directory, and the picture under a leaf **is** its expected rendering.
 
@@ -37,9 +37,22 @@ feature so retitling a section never forces a rename.
 element is proved by a picture of that element, cropped out of a full render of
 the composed screen — never by laying the element out on its own, which would
 prove it in a context the product never shows. Reviewing a spec means looking at
-what each line claims, and a reader asked to re-read a whole iPad screen for
-every line stops reading. A whole-screen picture is a deliberate exception, for
-a leaf that really is about the whole screen, and its leaf says so.
+what each line claims, and a reader asked to re-read a whole screen for every
+line stops reading. A whole-screen picture is a deliberate exception, for a leaf
+that really is about the whole screen, and its case says so in a
+`// whole-screen:` comment the coverage gate demands.
+
+**Whole-screen renders live at the foot of the document**, under
+[Full-screen renders](#full-screen-renders); their leaves carry a generated link
+there instead of a page-tall image. Everything else renders inline, cropped, at
+one reference size. That keeps the numbered spine scannable: a reader skims the
+claims, and goes to the bottom when they want to see a whole screen.
+
+**Only whole-screen leaves are specified per size class.** The app runs on phone
+and tablet, portrait and landscape, and it is the whole-screen picture whose
+claim is about fitting a screen — so those, and only those, carry one render per
+supported size. A cropped element looks the same everywhere its leaf is about,
+so multiplying its goldens would multiply review work without adding review.
 
 **The pictures are machine-managed.** Everything between a
 `<!-- req-gallery:<id> -->` marker and its closing marker is written by the
@@ -61,11 +74,10 @@ scripted, never a microphone. Cases that need a different moment say so in
 their own words below.
 
 > ⚠️ **A green run means "claimed", not "fully verified".** The screen and saga
-> cases render the real SwiftUI screen on a simulator, but the audio session,
-> the microphone and the laugh classifier are fakes that record what the app
-> asked of them — so the capture leaves prove the app *asks* for a recording of
-> the right shape, never that AVAudioEngine delivers one. Nothing here runs on
-> a real iPad. A leaf marked **⚠ TBD** is in
+> cases render the real screen, but the audio session and the microphone are
+> fakes that record what the app asked of them — so the capture leaves prove the
+> app *asks* for a recording of the right shape, never that the platform
+> delivers one. Nothing here runs on real hardware. A leaf marked **⚠ TBD** is in
 > [`gate/pending.json`](gate/pending.json) with the reason it cannot run yet:
 > that is a burn-down list, tracked by #6, and it only shrinks.
 >
@@ -99,15 +111,16 @@ performed at.
 The strip a comedian glances at without moving their head — where they are in
 the slot, and that the set is being recorded.
 
-- `2.1` The stage screen fills one portrait iPad screen at 3:4 with no scrolling region.
+- `2.1` The stage screen fits one screen with no scrolling region, at every supported size.
 
   <!-- req-gallery:2.1 -->
-  ![one-screen.2.1](screen/cases/one-screen.2.1.png)
+  [Full-screen render →](#full-screen-renders)
   <!-- /req-gallery:2.1 -->
   <details><summary>Notes</summary>
 
   One of the three leaves whose picture is the whole screen rather than a crop:
-  what it claims is the screen.
+  what it claims is the screen. The per-size renders arrive with the harness
+  that can produce them; until then the reference size stands alone.
   </details>
 - `2.2` A red dot sits at the head of the header whenever capture is running.
 
@@ -158,7 +171,7 @@ The top region, and the largest thing on the screen: the words being performed.
 - `3.1` The joke being performed occupies the top region, its body text the largest text on the screen.
 
   <!-- req-gallery:3.1 -->
-  ![current-joke.3.1](screen/cases/current-joke.3.1.png)
+  [Full-screen render →](#full-screen-renders)
   <!-- /req-gallery:3.1 -->
   <details><summary>Notes</summary>
 
@@ -191,7 +204,7 @@ The top region, and the largest thing on the screen: the words being performed.
 - `3.5` Before the first card is tapped the region reads **`Tap a card to start`** and no card is live.
 
   <!-- req-gallery:3.5 -->
-  ![empty-stage.3.5](screen/cases/empty-stage.3.5.png)
+  [Full-screen render →](#full-screen-renders)
   <!-- /req-gallery:3.5 -->
   <details><summary>Notes</summary>
 
@@ -268,9 +281,9 @@ other mode will arrive.
   refuses to flatten it — it logs "Unable to render flattened version of
   PlatformViewRepresentableAdaptor&lt;Switch&gt;" and leaves the control out of
   the image, which is the yellow placeholder standing in its place in every
-  render below. Drawing a lookalike in pure SwiftUI would make a golden pass
-  while breaking the requirement, so this leaf waits for a kind that drives the
-  real control.
+  render below. Drawing a lookalike would make a golden pass while breaking the
+  requirement, so this leaf waits for a renderer that draws the real control
+  rather than embedding a platform one.
   </details>
 - `5.2` The switch cannot be turned on while no autodetector is available, and reports itself unavailable rather than silently ignoring the gesture.
   <details><summary>Notes</summary>
@@ -288,21 +301,41 @@ other mode will arrive.
 
 ## 6 — Capture
 
-The recording session. One module owns the microphone.
+The recording session, and the pass that reads it back. One module owns the
+microphone, and nothing listens while it is running.
 
 - `6.1` Recording starts when the show starts and runs unbroken to the end of the set.
 - `6.2` The recording is written as AAC into the app's own container, in a location the user can delete.
-- `6.3` A laugh event carries its class, confidence, start, duration, intensity and the identifier of the detector that produced it.
+- `6.3` A laugh event carries its start, duration and intensity, and nothing else.
   <details><summary>Notes</summary>
 
-  Decision D3: on-device SoundAnalysis and the Phase B batch detector produce
-  scores that are not comparable until a calibration pass exists. An event that
-  cannot say which detector produced it silently poisons cross-show analysis,
-  so the field is required at construction, not defaulted.
+  Decisions D3 and D7: one detector runs everywhere, and it is a loudness
+  threshold — it has no class to report and no confidence to report. A field
+  nothing can honestly populate is worse than an absent one, because a
+  downstream reader cannot tell a real value from a default. "And nothing else"
+  is the load-bearing half of this leaf: it is what a later classifier would
+  have to change the spec to add.
   </details>
 - `6.4` Laugh events and card taps are ordered on one monotonic clock, so their interleaving is well defined even across a wall-clock change.
-- `6.5` ⚠ TBD Recording continues while the iPad is locked and the app is backgrounded.
+- `6.5` ⚠ TBD Recording continues while the device is locked and the app is backgrounded.
 - `6.6` An audio-session interruption finalises the recording so far and resumes into the same show without losing captured audio.
+- `6.7` ⚠ TBD Nothing analyses audio while capture is running: a show's laugh events are produced by a pass over its finished recording.
+- `6.8` ⚠ TBD A laugh event is produced wherever the recording's short-term loudness holds above the room's own baseline for at least a minimum duration, and its intensity is that span's loudness.
+  <details><summary>Notes</summary>
+
+  Decision D7: in a club, sustained room noise above the baseline is laughter,
+  so the product does not need to tell laughter from applause from cheering.
+  The threshold and the minimum duration are the two numbers this rule turns
+  on; the owner approves them against a committed recording, and they are the
+  only place a false positive can be tuned away.
+  </details>
+- `6.9` ⚠ TBD The same recording yields identical laugh events every run, on every platform.
+  <details><summary>Notes</summary>
+
+  What a classifier could never promise, and the reason D7 is worth its
+  crudeness: detection is a pure function of the audio, so a take's laugh
+  numbers are comparable with a take recorded a year earlier on another device.
+  </details>
 
 ## 7 — Review
 
@@ -317,18 +350,32 @@ depends on one.
 
 ## 8 — Consent, privacy, compliance
 
-App Review guideline 2.5.14 and the "stays on your iPad" promise.
+Store review — iOS App Review guideline 2.5.14 and its Play equivalent — and
+the "stays on your device" promise.
 
 - `8.1` ⚠ TBD The consent screen is shown, and consent recorded, before the app first requests microphone access.
 - `8.2` ⚠ TBD A recording indicator is visible on every screen that can be shown while capture is running.
 - `8.3` ⚠ TBD The consent screen carries the line telling the comedian to observe local law and venue rules on recording an audience.
-- `8.4` The app declares a microphone usage description and the background-audio mode, and declares no other background mode.
+- `8.4` The iOS app declares a microphone usage description and the background-audio mode, and declares no other background mode.
 - `8.5` ⚠ TBD Phase A makes no outbound network request carrying recording, joke or show data.
+- `8.6` ⚠ TBD The Android app declares the record-audio permission and a microphone-typed foreground service, and declares no other dangerous permission.
+  <details><summary>Notes</summary>
+
+  The sibling of 8.4 at the other platform's boundary: one requirement — the
+  app asks for the microphone and for background audio, and for nothing else —
+  stated once per manifest that enforces it.
+  </details>
 
 ## 9 — Sagas
 
 Complete stories, one captioned frame per step — what a single frame cannot
 show: what arriving, tapping or time passing *changes*.
+
+A saga stays where its requirement is: the sequence is the claim, so its frames
+read beside the words that narrate them rather than at the foot of the doc. Each
+frame is cropped to the part of the screen the step changes — the same rule the
+`screen` kind follows, applied to a story. A storyboard of six full screens
+costs a reader the whole section and shows them mostly what did not move.
 
 - `9.1` **Working the set.** The comedian opens with a queued card, moves through the set as each bit lands, goes back to an earlier bit when the callback arrives, and runs over — the countdown turning orange and then red while the grid fills in behind them.
 
@@ -357,3 +404,25 @@ show: what arriving, tapping or time passing *changes*.
 
      ![working-the-set.9.1 step 6](saga/cases/working-the-set.9.1.step-06.png)
   <!-- /req-gallery:9.1 -->
+
+## Full-screen renders
+
+The whole-screen pictures, kept together so the numbered spine above stays
+readable. Each is the expected rendering of the leaf named above it, and each is
+the owner's approval record for that screen exactly as the product draws it.
+
+<!-- req-gallery-full -->
+
+### `2.1` — one-screen
+
+![one-screen.2.1](screen/cases/one-screen.2.1.png)
+
+### `3.1` — current-joke
+
+![current-joke.3.1](screen/cases/current-joke.3.1.png)
+
+### `3.5` — empty-stage
+
+![empty-stage.3.5](screen/cases/empty-stage.3.5.png)
+
+<!-- /req-gallery-full -->
