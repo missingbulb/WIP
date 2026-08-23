@@ -129,8 +129,11 @@ else. Likewise the "12,000 full-time US comedians" figure — no origin publishe
   questions? Needs a human or an unblocked environment to open the PDF.
 - What do BitBinder/Joktor/Bits charge, and do their reviews complain about missing
   transcription/laugh-tracking? (App Store review mining — blocked here.)
-- Is iPad the right device? Phone-first capture looks universal; iPad's role
-  (review/organize desk tool vs. on-stage capture device) is untested.
+- Answered since this page's last pass, not by new research: architecture
+  decision D1 (`dev/design/architecture.md`) settled the platform question this
+  page had open — one Flutter codebase, iOS and Android, phone and tablet sizes,
+  not an iPad-only product. Phone-first capture vs. iPad-as-review-desk is still
+  untested, but as a UX question within that scope, not a platform choice.
 - Direct r/Standup testimony on tools and on reviewing recordings (reddit.com
   unreachable in the blocked environment; anecdotes above arrived via newsletters).
 
@@ -143,3 +146,8 @@ else. Likewise the "12,000 full-time US comedians" figure — no origin publishe
   workflows and the listening-back gap, and the theft/trust dynamics around
   recording; rewrote Key insights; replaced seed open questions with what the pass
   surfaced; flagged two unattributable circulating figures as unusable.
+- **2026-08-23** — spot-checked this page against `dev/design/architecture.md`
+  (written from this page's first pass, landed in the same window): the "is iPad
+  the right device" open question is answered there (D1 — cross-platform, not
+  iPad-only), so it's marked resolved rather than carried forward; no new
+  research warranted a Key insights change.
