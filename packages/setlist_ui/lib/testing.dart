@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'setlist_ui.dart';
 
 /// Loads the families the product bundles into the test renderer.
 ///
@@ -15,6 +18,13 @@ import 'package:flutter_test/flutter_test.dart';
 /// The families are read from the bundle's own `FontManifest.json`, so what the
 /// harness renders with is whatever the product ships — the two cannot drift
 /// apart by editing one of them.
+/// Call this from `setUpAll`, never from inside a test.
+///
+/// Reading the bundle from within a `testWidgets` body works exactly once per
+/// process: the second call never completes, and it presents as the second test
+/// in the file hanging until its ten-minute timeout rather than as an error.
+/// `setUpAll` runs outside the per-test zones, so one call there serves every
+/// test in the file.
 Future<void> loadProductFonts() async {
   TestWidgetsFlutterBinding.ensureInitialized();
   final manifest = json.decode(
@@ -28,4 +38,59 @@ Future<void> loadProductFonts() async {
     }
     await loader.load();
   }
+}
+
+/// The sizes the product is specified at.
+///
+/// Only a leaf whose claim *is* the screen renders once per size; every other
+/// leaf is proved by a crop at [referenceSize] (decision D11).
+const stageSizes = <String, Size>{
+  'tablet-portrait': Size(834, 1112),
+  'tablet-landscape': Size(1112, 834),
+  'phone-portrait': Size(390, 844),
+  'phone-landscape': Size(844, 390),
+};
+
+const referenceSize = 'tablet-portrait';
+
+/// Renders the real stage screen at one of the specified sizes.
+///
+/// Expects [loadProductFonts] to have run in the file's `setUpAll`.
+///
+/// Every screen case goes through here, so a golden differs from its
+/// neighbours only where the requirement under test differs. The device pixel
+/// ratio is pinned to 1 so a golden's pixel dimensions are its logical ones and
+/// a reader can measure the picture against the spec.
+Future<void> pumpStage(
+  WidgetTester tester,
+  StageState state, {
+  String size = referenceSize,
+}) async {
+  final bounds = stageSizes[size]!;
+  tester.view
+    ..physicalSize = bounds
+    ..devicePixelRatio = 1.0;
+  addTearDown(tester.view.reset);
+
+  await tester.pumpWidget(
+    Directionality(
+      textDirection: TextDirection.ltr,
+      child: MediaQuery(
+        data: MediaQueryData(size: bounds),
+        child: Center(
+          child: SizedBox(
+            width: bounds.width,
+            height: bounds.height,
+            child: StageScreen(state: state),
+          ),
+        ),
+      ),
+    ),
+  );
+  // Fixed pumps, never pumpAndSettle: the switch keeps tickers running, so
+  // "settled" never arrives and the wait burns pumpAndSettle's ten-minute
+  // timeout. A fixed pump also makes an in-flight state a capturable frame
+  // rather than something that has to be waited out.
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 300));
 }

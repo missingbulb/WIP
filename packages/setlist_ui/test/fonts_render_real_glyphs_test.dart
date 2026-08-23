@@ -16,9 +16,9 @@ import 'package:setlist_ui/testing.dart';
 /// dozen leaves, and all of them would silently stop being checked. Watched it
 /// fail with the fonts unloaded: the two renders below came back identical.
 void main() {
-  testWidgets('same-length copy changes are visible in a render', (tester) async {
-    await loadProductFonts();
+  setUpAll(loadProductFonts);
 
+  testWidgets('same-length copy changes are visible in a render', (tester) async {
     final stand = await _render(tester, 'THE STAND');
     final stane = await _render(tester, 'THE STANE');
 

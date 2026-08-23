@@ -27,3 +27,8 @@ flutter:
         - asset: fonts/DejaVuSans.ttf
         - asset: fonts/DejaVuSans-Bold.ttf
           weight: 700
+    # The clocks and card footnotes are monospaced so a digit changing does not
+    # move the ones beside it — a number that jitters is unreadable at a glance.
+    - family: DejaVuSansMono
+      fonts:
+        - asset: fonts/DejaVuSansMono.ttf
