@@ -30,7 +30,7 @@ resting state, pixel-exact against a committed golden. `saga` — a multi-step
 story, captured as one captioned frame per step. `behavior` — a driven
 gesture and the consequence it produces, asserted in code against the fakes'
 recordings. `logic` — a pure product rule proved against shipped code. Each
-case file is `<kind>/cases/<slug>.<id>.case.swift`, the slug naming the
+case file is `<kind>/cases/<slug>.<id>.case.dart`, the slug naming the
 feature so retitling a section never forces a rename.
 
 **The picture is the smallest surface that proves its leaf.** A leaf about one
@@ -81,8 +81,9 @@ their own words below.
 > [`gate/pending.json`](gate/pending.json) with the reason it cannot run yet:
 > that is a burn-down list, tracked by #6, and it only shrinks.
 >
-> Agent sessions on this repo have no Swift toolchain and no macOS, so every
-> case here is executed by CI, never locally.
+> Every case here renders and compares headless on Linux, so an agent session
+> runs the whole suite locally rather than waiting on CI. What no case reaches
+> is the native recorder: that needs a device.
 
 ---
 
@@ -168,7 +169,7 @@ the slot, and that the set is being recorded.
 
 The top region, and the largest thing on the screen: the words being performed.
 
-- `3.1` The joke being performed occupies the top region, its body text the largest text on the screen.
+- `3.1` The joke being performed occupies the top region, its body text the largest text on the screen. Where the screen is narrow or short the panel is capped, and the body ellipsizes rather than the set list losing cards.
 
   <!-- req-gallery:3.1 -->
   [Full-screen render →](#full-screen-renders)
@@ -178,6 +179,11 @@ The top region, and the largest thing on the screen: the words being performed.
   Whole-screen by necessity: "the largest text on the screen" is a claim about
   the joke panel *against everything else*, so a crop of the panel could not
   prove it.
+
+  The cap is about a third of the available height, and applies on a narrow
+  *or* a short screen — a phone held sideways is wide and still has nowhere to
+  put nine cards. What gives under it is the body: a comedian mid-bit is
+  reading the top of it, and the grid is what they navigate by.
   </details>
 - `3.2` The current joke's title sits above its body, with the time it has been running so far — **`on 1:24`**.
 
@@ -196,7 +202,7 @@ The top region, and the largest thing on the screen: the words being performed.
   reads as de-emphasis, the opposite of what the words a punch depends on
   need.
   </details>
-- `3.4` The joke's optional text renders under the body as bordered tags — alternate tags and delivery notes, with callbacks in green.
+- `3.4` The joke's optional text renders under the body as bordered tags — alternate tags and delivery notes, with callbacks in green. A capped panel keeps every tag, on tightened spacing.
 
   <!-- req-gallery:3.4 -->
   ![joke-optional-text.3.4](screen/cases/joke-optional-text.3.4.png)
@@ -226,11 +232,18 @@ The top region, and the largest thing on the screen: the words being performed.
 
 The bottom two thirds: nine large boxes, read at a glance from behind a mic.
 
-- `4.1` The set list renders as a 3-column grid of nine cards, each carrying its joke's title, filling the height the joke panel leaves.
+- `4.1` The set list renders as a grid of nine cards, each carrying its joke's title, filling the height the joke panel leaves — three columns across, two on a narrow screen.
 
   <!-- req-gallery:4.1 -->
   ![set-list-grid.4.1](screen/cases/set-list-grid.4.1.png)
   <!-- /req-gallery:4.1 -->
+  <details><summary>Notes</summary>
+
+  Three cards across a phone leaves each about 120pt, which clips a title like
+  "Flatmate rota" to five characters. A card nobody can read from behind a mic
+  is worse than a taller grid, so below 600pt of width the third column goes
+  rather than the legibility.
+  </details>
 - `4.2` Told, live and queued cards are each coloured differently — green, orange, panel-dark.
 
   <!-- req-gallery:4.2 -->
@@ -274,16 +287,17 @@ The bottom two thirds: nine large boxes, read at a glance from behind a mic.
 Manual segmentation is Phase A's only segmentation; the switch is where the
 other mode will arrive.
 
-- `5.1` ⚠ TBD The segment-mode control is a standard iOS switch labelled **`Manual switch`** when off and **`Autodetect bits`** when on, with no explanatory text beside it.
-  <details><summary>Notes — why a golden cannot see this one</summary>
+- `5.1` The segment-mode control is a switch labelled **`Manual switch`** when off and **`Autodetect bits`** when on, with no explanatory text beside it.
 
-  The standard switch is UIKit-backed, and the renderer behind the screen kind
-  refuses to flatten it — it logs "Unable to render flattened version of
-  PlatformViewRepresentableAdaptor&lt;Switch&gt;" and leaves the control out of
-  the image, which is the yellow placeholder standing in its place in every
-  render below. Drawing a lookalike would make a golden pass while breaking the
-  requirement, so this leaf waits for a renderer that draws the real control
-  rather than embedding a platform one.
+  <!-- req-gallery:5.1 -->
+  ![segment-mode-switch.5.1](screen/cases/segment-mode-switch.5.1.png)
+  <!-- /req-gallery:5.1 -->
+  <details><summary>Notes</summary>
+
+  One control on both platforms, drawn by the framework rather than embedded
+  from the host — so the golden shows the real switch a comedian touches, not
+  a stand-in. Adopting a per-platform control instead would be a change to this
+  leaf, not an implementation detail underneath it.
   </details>
 - `5.2` The switch cannot be turned on while no autodetector is available, and reports itself unavailable rather than silently ignoring the gesture.
   <details><summary>Notes</summary>

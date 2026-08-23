@@ -18,6 +18,7 @@ import 'cases/laugh-strip-lit.3.6.case.dart';
 import 'cases/one-screen.2.1.case.dart';
 import 'cases/pacing-bar.2.9.case.dart';
 import 'cases/recording-indicator.2.2.case.dart';
+import 'cases/segment-mode-switch.5.1.case.dart';
 import 'cases/set-list-grid.4.1.case.dart';
 import 'cases/setup-highlight.3.3.case.dart';
 import 'cases/started-tally.4.4.case.dart';
@@ -40,6 +41,7 @@ final screenCases = <RequirementCase>[
   oneScreen_2_1,
   pacingBar_2_9,
   recordingIndicator_2_2,
+  segmentModeSwitch_5_1,
   setListGrid_4_1,
   setupHighlight_3_3,
   startedTally_4_4,
