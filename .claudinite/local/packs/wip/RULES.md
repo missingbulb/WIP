@@ -8,11 +8,12 @@ A lesson that would hold in another repo does not belong here — propose it to 
 canon instead, where every repo gets it.
 
 - **Verifying an app change in an agent session here** — install the Flutter SDK pinned in
-  `.flutter-version` and run the suites: `dart test` in `packages/setlist_core`, and
-  `flutter test` in `packages/setlist_ui` and `dev/requirements`. Goldens render and compare
-  headless on Linux with no display server, so a change is verified locally rather than only by
-  CI. What still cannot be verified anywhere but a device is the native recorder under
-  `app/ios` and `app/android` — neither toolchain exists here.
+  `.flutter-version` and run the suites: `dart test` in `packages/setlist_core`, `flutter test`
+  in `packages/setlist_ui`, and `flutter test runner_test.dart` in `dev/requirements` (its cases
+  sit outside a `test/` folder, so the bare `flutter test` command finds nothing there). Goldens
+  render and compare headless on Linux with no display server, so a change is verified locally
+  rather than only by CI. What still cannot be verified anywhere but a device is the native
+  recorder under `app/ios` and `app/android` — neither toolchain exists here.
 
 - **Loading fonts in a Flutter test** — call `loadProductFonts` from `setUpAll`, never inside a
   test body. Reading the asset bundle works exactly once per process, and a second call hangs
