@@ -15,11 +15,6 @@ canon instead, where every repo gets it.
   rather than only by CI. What still cannot be verified anywhere but a device is the native
   recorder under `app/ios` and `app/android` — neither toolchain exists here.
 
-- **Loading fonts in a Flutter test** — call `loadProductFonts` from `setUpAll`, never inside a
-  test body. Reading the asset bundle works exactly once per process, and a second call hangs
-  the next test until its ten-minute timeout rather than failing: it presents as the second test
-  in a file being slow, not as an error.
-
 - **Doing real file or image I/O inside `testWidgets`** — wrap it in `tester.runAsync`. In the
   fake-async test zone the future never completes, and the case hangs rather than failing.
 
