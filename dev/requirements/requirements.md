@@ -415,7 +415,10 @@ the owner's approval record for that screen exactly as the product draws it.
 
 ### `2.1` — one-screen
 
-![one-screen.2.1](screen/cases/one-screen.2.1.png)
+![one-screen.2.1](screen/cases/one-screen.2.1.phone-landscape.png)
+![one-screen.2.1](screen/cases/one-screen.2.1.phone-portrait.png)
+![one-screen.2.1](screen/cases/one-screen.2.1.tablet-landscape.png)
+![one-screen.2.1](screen/cases/one-screen.2.1.tablet-portrait.png)
 
 ### `3.1` — current-joke
 

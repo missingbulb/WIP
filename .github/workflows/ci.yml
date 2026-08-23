@@ -36,25 +36,11 @@ jobs:
       - name: Every requirement leaf is claimed exactly once
         run: node dev/requirements/gate/coverage-gate.mjs
 
-  requirements:
-    name: Executable requirements
-    runs-on: ubuntu-latest
-    # The requirement cases run against SetlistCore, which is platform-
-    # independent; the app shell and any simulator-rendered kind build in the
-    # `app` job below.
-    container: swift:6.0-noble
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-      - run: swift test
-
   dart:
     name: Dart packages
     runs-on: ubuntu-latest
-    # The Flutter half of the conversion (#40). It runs beside the Swift lanes
-    # rather than replacing them: both trees are live until the Swift one is
-    # deleted, and `main` stays green throughout.
+    # Every lane runs on Linux (decision D9). A macOS runner returns only for
+    # the iOS archive-and-upload job, whose input is a build rather than a test.
     steps:
       - uses: actions/checkout@v4
         with:
@@ -76,43 +62,16 @@ jobs:
           flutter pub get
           flutter test
 
-  app:
-    name: iPad app and screen requirements
-    runs-on: macos-15
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-      - run: brew install xcodegen
-      - name: Generate the Xcode project
-        working-directory: app
-        run: xcodegen generate
-      - name: Pick an iPad simulator
-        id: sim
+      - name: Every requirement, against the real screens
+        working-directory: dev/requirements
         run: |
-          udid=$(xcrun simctl list devices available --json \
-            | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; print(next(x["udid"] for runtime in sorted(d) if "iOS" in runtime for x in d[runtime] if "iPad" in x["name"]))')
-          echo "udid=$udid" >> "$GITHUB_OUTPUT"
-          # The runtime is what renders the goldens, so name it in the log: a
-          # whole screen kind going red at once usually means it moved.
-          xcrun simctl list devices available | grep -B99 "$udid" | grep -E "^-- |$udid"
-      - name: Build the app and run every requirement kind
-        working-directory: app
-        run: |
-          set -o pipefail
-          xcodebuild test \
-            -project Setlist.xcodeproj \
-            -scheme Setlist \
-            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
-            CODE_SIGNING_ALLOWED=NO > xcodebuild.log
-      - name: Report what failed
-        if: failure()
-        run: tail -120 app/xcodebuild.log
+          flutter pub get
+          flutter test runner_test.dart
+
       - name: Keep the renders that did not match
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: screen-failures
-          path: dev/requirements/.failures/
-          include-hidden-files: true
+          name: requirement-failures
+          path: dev/requirements/**/failures/
           if-no-files-found: ignore

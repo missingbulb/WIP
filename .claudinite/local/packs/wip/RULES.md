@@ -7,10 +7,20 @@ description of how something works.
 A lesson that would hold in another repo does not belong here — propose it to the Claudinite
 canon instead, where every repo gets it.
 
-- **Doing Swift/iPad-app work in an agent session here** — there is no Swift toolchain and no
-  macOS: the toolchain download is blocked by the environment's network policy, not merely
-  missing. Nothing Swift can be compiled or run locally, so every Swift/iPad-app change is
-  verified only by CI (the macOS runner) — never by a local build.
+- **Verifying an app change in an agent session here** — install the Flutter SDK pinned in
+  `.flutter-version` and run the suites: `dart test` in `packages/setlist_core`, and
+  `flutter test` in `packages/setlist_ui` and `dev/requirements`. Goldens render and compare
+  headless on Linux with no display server, so a change is verified locally rather than only by
+  CI. What still cannot be verified anywhere but a device is the native recorder under
+  `app/ios` and `app/android` — neither toolchain exists here.
+
+- **Loading fonts in a Flutter test** — call `loadProductFonts` from `setUpAll`, never inside a
+  test body. Reading the asset bundle works exactly once per process, and a second call hangs
+  the next test until its ten-minute timeout rather than failing: it presents as the second test
+  in a file being slow, not as an error.
+
+- **Doing real file or image I/O inside `testWidgets`** — wrap it in `tester.runAsync`. In the
+  fake-async test zone the future never completes, and the case hangs rather than failing.
 
 - **Naming a new fleet-wide secret, endpoint id, or routine id** (queue/scheduler wiring in
   `.claudinite-checks.json` or `.github/workflows/`) — grep the Claudinite engine for the live
