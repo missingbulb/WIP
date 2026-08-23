@@ -1,0 +1,19 @@
+name: setlist_requirements
+description: >-
+  The executable specification. Every leaf of requirements.md is claimed by
+  exactly one case here, and the coverage gate enforces the bijection.
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  setlist_core:
+    path: ../../packages/setlist_core
+  setlist_ui:
+    path: ../../packages/setlist_ui
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter

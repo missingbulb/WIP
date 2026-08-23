@@ -80,13 +80,19 @@ class StageScreen extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) {
               final narrow = constraints.maxWidth < narrowWidth;
+              // The panel is capped when the screen is short *or* narrow, and
+              // the two catch different devices: a portrait phone is narrow but
+              // tall, a landscape phone is wide but short, and on both the
+              // panel would otherwise take the height the set list needs.
+              final short = constraints.maxHeight < shortHeight;
+              final capped = narrow || short;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _header(),
-                  _currentJoke(narrow: narrow, available: constraints.maxHeight),
-                  _segmentModeRow(),
-                  Expanded(child: _setListGrid(narrow: narrow)),
+                  _currentJoke(capped: capped, available: constraints.maxHeight),
+                  _segmentModeRow(short: short),
+                  Expanded(child: _setListGrid(narrow: narrow, short: short)),
                 ],
               );
             },
@@ -141,6 +147,8 @@ class StageScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
+              // Not flexible: the clocks are the part that must stay whole, so
+              // the room's name is the only thing that yields.
               Row(
                 key: StageRegion.clocks.key,
                 mainAxisSize: MainAxisSize.min,
@@ -237,15 +245,18 @@ class StageScreen extends StatelessWidget {
   /// Only applied on a narrow screen. A phone cannot show the whole body *and*
   /// nine readable cards, so the body is what gives: a comedian mid-bit is
   /// reading the top of it, and the grid is what they navigate by.
-  static const double narrowPanelShare = 0.34;
+  static const double cappedPanelShare = 0.34;
 
-  Widget _currentJoke({required bool narrow, required double available}) {
+  /// The height below which the joke panel has to give the set list room.
+  static const double shortHeight = 600;
+
+  Widget _currentJoke({required bool capped, required double available}) {
     final card = state.liveCard;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxHeight: narrow ? available * narrowPanelShare : double.infinity,
+          maxHeight: capped ? available * cappedPanelShare : double.infinity,
         ),
         child: Container(
         key: StageRegion.currentJoke.key,
@@ -256,7 +267,13 @@ class StageScreen extends StatelessWidget {
             Positioned(left: 0, top: 0, bottom: 0, width: 6,
                 child: const ColoredBox(color: Palette.orange)),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+              // A capped panel tightens its own rhythm before it gives up any
+              // of its content: the title, the tags and the strip all still
+              // have to be there, and only the space between them is spare.
+              padding: EdgeInsets.symmetric(
+                horizontal: 22,
+                vertical: capped ? 10 : 18,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -292,16 +309,16 @@ class StageScreen extends StatelessWidget {
                     // an unbounded column is a layout error rather than a
                     // shrink-wrap.
                     _flexIf(
-                      narrow,
+                      capped,
                       Text.rich(
                         jokeBody(card.joke),
                         key: StageRegion.jokeBody.key,
-                        overflow: narrow ? TextOverflow.ellipsis : TextOverflow.clip,
+                        overflow: capped ? TextOverflow.ellipsis : TextOverflow.clip,
                         style: const TextStyle(fontSize: 25, height: 1.36),
                       ),
                     ),
                     if (card.joke.tags.isNotEmpty || card.joke.callbacks.isNotEmpty) ...[
-                      const SizedBox(height: 14),
+                      SizedBox(height: capped ? 8 : 14),
                       _tags(card.joke),
                     ],
                   ] else
@@ -310,7 +327,7 @@ class StageScreen extends StatelessWidget {
                       key: StageRegion.jokeBody.key,
                       style: const TextStyle(fontSize: 25, color: Palette.dim),
                     ),
-                  const SizedBox(height: 14),
+                  SizedBox(height: capped ? 8 : 14),
                   _laughStrip(),
                 ],
               ),
@@ -400,10 +417,12 @@ class StageScreen extends StatelessWidget {
 
   // ---------------------------------------------------------- segment mode
 
-  Widget _segmentModeRow() {
+  Widget _segmentModeRow({required bool short}) {
     final on = state.model.segmentMode == SegmentMode.autodetect;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      // A short screen buys the set list its last rows out of the spacing
+      // between blocks before it takes anything out of the blocks themselves.
+      padding: EdgeInsets.fromLTRB(16, short ? 6 : 16, 16, 0),
       child: Row(
         key: StageRegion.segmentMode.key,
         children: [
@@ -426,20 +445,28 @@ class StageScreen extends StatelessWidget {
 
   // -------------------------------------------------------------- set list
 
-  Widget _setListGrid({required bool narrow}) {
+  Widget _setListGrid({required bool narrow, required bool short}) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+      padding: EdgeInsets.fromLTRB(16, short ? 6 : 14, 16, short ? 6 : 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          // The count and the key share a line where there is room and stack
+          // where there is not. Both have to be on the screen — 4.4 and 4.3 —
+          // and a narrow phone cannot hold them side by side.
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            spacing: 13,
+            runSpacing: 6,
             children: [
-              Text(
-                'SET LIST · ${state.model.startedCount} / ${state.model.plannedCount}',
-                key: StageRegion.setListCount.key,
-                style: const TextStyle(fontSize: 14, letterSpacing: 0.6, color: Palette.dim),
+              SizedBox(
+                width: narrow ? double.infinity : null,
+                child: Text(
+                  'SET LIST · ${state.model.startedCount} / ${state.model.plannedCount}',
+                  key: StageRegion.setListCount.key,
+                  style: const TextStyle(fontSize: 14, letterSpacing: 0.6, color: Palette.dim),
+                ),
               ),
-              const Spacer(),
               Row(
                 key: StageRegion.setListKey.key,
                 mainAxisSize: MainAxisSize.min,

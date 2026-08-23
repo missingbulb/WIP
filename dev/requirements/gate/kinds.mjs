@@ -1,6 +1,10 @@
 // The kind registry: one entry per way a requirement can be asserted. The
 // folder a case lives in IS its kind, so adding a kind is this entry plus the
 // directory — no gate rule mentions a kind by name.
+//
+// No kind carries a platform guard any more: every kind renders in the Flutter
+// test harness on Linux, which is what lets CI run without a macOS runner
+// (decision D9).
 export const KINDS = [
   {
     id: 'screen',
@@ -9,9 +13,6 @@ export const KINDS = [
     // owner approves by sight, cropped to the element its leaf is about.
     images: true,
     scoped: true,
-    // Rendering needs SwiftUI and a simulator, so this kind runs only in the
-    // `app` CI job; elsewhere its manifest is empty.
-    platform: '#if canImport(SwiftUI) && os(iOS)',
   },
   {
     id: 'saga',
@@ -23,7 +24,6 @@ export const KINDS = [
     // frames it labels.
     images: true,
     frames: true,
-    platform: '#if canImport(SwiftUI) && os(iOS)',
   },
   {
     id: 'behavior',
@@ -40,5 +40,5 @@ export const KINDS = [
   },
 ];
 
-export const CASE_EXT = 'swift';
+export const CASE_EXT = 'dart';
 export const GOLDEN_EXT = 'png';

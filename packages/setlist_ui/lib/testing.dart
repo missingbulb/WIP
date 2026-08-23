@@ -53,6 +53,19 @@ const stageSizes = <String, Size>{
 
 const referenceSize = 'tablet-portrait';
 
+/// The sizes in the order a single test should render them: widest last.
+///
+/// Rendering from narrow to wide is not cosmetic. Flutter updates the previous
+/// tree rather than rebuilding it, so shrinking the box lays the outgoing
+/// render objects out against a width they were never built for, and they
+/// report overflows for a screen nobody is looking at any more. Growing never
+/// does that.
+List<String> get stageSizesWidestLast {
+  final names = stageSizes.keys.toList();
+  names.sort((a, b) => stageSizes[a]!.width.compareTo(stageSizes[b]!.width));
+  return names;
+}
+
 /// Renders the real stage screen at one of the specified sizes.
 ///
 /// Expects [loadProductFonts] to have run in the file's `setUpAll`.
@@ -67,13 +80,29 @@ Future<void> pumpStage(
   String size = referenceSize,
 }) async {
   final bounds = stageSizes[size]!;
+  // The surface has to be at least as large as what is drawn on it: a box
+  // taller than the viewport lays out against unbounded height, and every
+  // Expanded inside it silently stops working.
   tester.view
     ..physicalSize = bounds
     ..devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
 
+  // One test may render several sizes in turn. The old tree is unmounted in a
+  // frame of its own first: updating straight from one size to the next lays
+  // out render objects that are on their way out against the new width, and
+  // they report overflows from a screen nobody is looking at any more.
+  await tester.pumpWidget(const SizedBox.shrink());
+  await tester.pump();
+
   await tester.pumpWidget(
-    Directionality(
+    // The whole subtree is keyed by size, not just the screen inside it: when
+    // one test renders several sizes in turn, Flutter otherwise updates the
+    // previous tree in place, and render objects that are on their way out get
+    // laid out once more against the new width.
+    KeyedSubtree(
+      key: ValueKey(size),
+      child: Directionality(
       textDirection: TextDirection.ltr,
       child: MediaQuery(
         data: MediaQueryData(size: bounds),
@@ -81,10 +110,15 @@ Future<void> pumpStage(
           child: SizedBox(
             width: bounds.width,
             height: bounds.height,
+            // Keyed by size so a second render in the same test builds a fresh
+            // tree rather than updating the last one: reused elements keep
+            // their old slots, and a card ends up laid out against a width the
+            // screen no longer has.
             child: StageScreen(state: state),
           ),
         ),
       ),
+    ),
     ),
   );
   // Fixed pumps, never pumpAndSettle: the switch keeps tickers running, so
