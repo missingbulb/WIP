@@ -12,7 +12,7 @@ of transcripts into distinct bits.
 - Cloudflare Containers are GA but CPU-only — fine for the small OSS laughter detector; custom models can't run on Workers AI.
 - Published comedy pipelines (TIC-TALK, EMNLP 2021) already do exactly this: laughter peaks + embedding topic shifts as bit boundaries.
 - Cloudflare Stream rejects audio-only uploads — serve show audio as range requests straight from R2 (free egress).
-- Amplitude thresholding alone is untrustworthy; classify the sound, then use energy within laugh windows as intensity.
+- Amplitude thresholding alone is untrustworthy — the one comedy-specific benchmark found has ML beating energy detection.
 
 ## Recording (comedy context)
 
@@ -107,13 +107,27 @@ carry publisher attribution without an opened page. Retrieved 2026-08-20.
   transcript + laughter server-side; used by the TIC-TALK comedy pipeline at 0.8 s
   laughter resolution ([arxiv.org/pdf/2603.21803](https://arxiv.org/pdf/2603.21803),
   Whisper-AT arXiv 2307.03183; snippet only).
-- **Amplitude thresholding alone is untrustworthy**: no citable benchmark of pure
-  energy-thresholding for laughter was found; the reasoned failure modes (applause,
-  cheers, heckles, glassware, varying PA level, laughter overlapping the next line)
-  are corroborated by AudioSet keeping Laughter/Applause/Cheering as distinct
-  classes and by Gillick 2021's noise-false-positive motivation. Practical hybrid:
-  classifier for the class decision, RMS energy inside laughter-classified windows
-  as the intensity score.
+- **Amplitude thresholding alone is untrustworthy**: the reasoned failure modes
+  (applause, cheers, heckles, glassware, varying PA level, laughter overlapping the
+  next line) are corroborated by AudioSet keeping Laughter/Applause/Cheering as
+  distinct classes and by Gillick 2021's noise-false-positive motivation. Practical
+  hybrid: classifier for the class decision, RMS energy inside laughter-classified
+  windows as the intensity score.
+- **A comedy-specific benchmark now exists, and it favors ML**: Kuznetsova &
+  Strapparava, "Multimodal and Multilingual Laughter Detection in Stand-Up Comedy
+  Videos" (LREC-COLING 2024), built a Russian/English stand-up dataset from YouTube
+  and compared two approaches head-to-head — an energy-based peak-detection
+  algorithm over preprocessed voiceless audio vs. a pretrained-model ML classifier.
+  Reported result: the ML approach currently outperforms peak detection in accuracy
+  and generalization, though peak detection "shows promise and warrants further
+  study" (snippet only — exact precision/recall/F1 numbers need the full paper, page
+  fetch blocked) ([aclanthology.org/2024.lrec-main.1037](https://aclanthology.org/2024.lrec-main.1037/)).
+  This is the closest thing to a direct answer to this page's own open question about
+  a comedy-club laughter-detection benchmark, and it argues the opposite direction
+  from architecture decision D7 (`dev/design/architecture.md`), which chose a pure
+  loudness envelope specifically for its simplicity and cross-platform determinism —
+  D7 already carries this tradeoff as risk R1, so this finding sharpens that risk
+  rather than overturning the decision.
 
 ## Text segmentation
 
@@ -179,25 +193,40 @@ repo, `production` branch — `workers-ai-models/whisper*.json`,
 SoundAnalysis and Speech symbols (URLs inlined above). Snippet-only sources are
 marked inline beside each claim; developers.cloudflare.com and several publisher
 pages were egress-blocked in the research environment — page-level verification of
-snippet-only items needs a human or an unblocked environment.
+snippet-only items needs a human or an unblocked environment. Kuznetsova &
+Strapparava, "Multimodal and Multilingual Laughter Detection in Stand-Up Comedy
+Videos" (LREC-COLING 2024) —
+[aclanthology.org/2024.lrec-main.1037](https://aclanthology.org/2024.lrec-main.1037/),
+snippet only, added 2026-08-23.
 
 ## Open questions
 
 - Real Workers AI Whisper per-request audio ceiling (docs silent; community says
   ~1–2 MB) and whether the async queue path raises it — verify from an unblocked
   environment.
-- Is requiring iPadOS 26 acceptable for target users (unlocks SpeechAnalyzer)?
-  Otherwise WhisperKit adds a ~1.6 GB model download.
-- No published benchmark of any laughter detector on comedy-club audio (PA speech
-  bleeding into crowd mic) — needs an evaluation on a real recorded set.
-- Does the built-in SoundAnalysis classifier run while backgrounded/screen-locked
-  during a recording session? (Forum-reported failure; needs a device test.)
-- Thermal/battery for the full 60-min record+classify+transcribe stack on iPad —
-  needs an empirical spike.
+- Exact precision/recall/F1 for Kuznetsova & Strapparava's stand-up-comedy energy-
+  vs-ML laughter comparison (below) — the ACL Anthology snippet reports only the
+  direction of the result, not numbers; needs the full paper, page fetch blocked.
 - Whisper chunk-boundary handling: time-based segmentation with overlap +
   timestamp stitching vs. Deepgram nova-3 (which may take longer inputs —
   unverified).
-- Exact `windowDuration` bounds of the built-in classifier v1.
+- Thermal/battery for a full 60-min recording session on a phone or tablet —
+  narrower than this page's original framing now that architecture decision D8
+  (`dev/design/architecture.md`) took live classification off the table
+  entirely: nothing analyzes audio while the microphone is live, so the on-device
+  load during capture is recording alone (transcription and laugh-detection both
+  run after the set, server-side or in Detect). Still needs a device run (tracked
+  as architecture risk R4).
+
+Answered by architecture decisions made since this page's last pass (D2, D7, D8 in
+`dev/design/architecture.md`), not by new research — removed rather than carried
+as open: whether iPadOS 26 is an acceptable floor (moot — D2 sets iOS 17, and
+transcription was already decided server-side regardless of SpeechAnalyzer
+availability); whether the built-in SoundAnalysis classifier survives a
+backgrounded/locked screen (moot — D7/D8 mean the product never runs it live at
+all, architecture risk R2 records this as retired); the built-in classifier's
+`windowDuration` bounds (moot for the same reason — nothing in the current design
+calls it).
 
 ## Growth log
 
@@ -209,3 +238,11 @@ snippet-only items needs a human or an unblocked environment.
   laugh-detection models, comedy-specific segmentation precedent, and the verified
   Cloudflare batch-pipeline limits; rewrote Key insights; replaced seed open
   questions with the pass's concrete unknowns.
+- **2026-08-23** — spot-checked this page against `dev/design/architecture.md`
+  (written from this page's first pass, landed in the same window): three open
+  questions were already answered there by decisions D2/D7/D8 and are removed
+  rather than carried forward. Added the one comedy-specific laughter-detection
+  benchmark found (Kuznetsova & Strapparava, ACL 2024) — energy-based peak
+  detection underperforms ML on stand-up audio, sharpening architecture risk R1
+  without new numbers (page fetch still blocked); rewrote the amplitude-
+  thresholding Key insights bullet to carry that citation.
