@@ -42,3 +42,10 @@ canon instead, where every repo gets it.
 - **Fetching an Apple Developer Documentation page** (`developer.apple.com/documentation/...`) for
   product-wiki research — it's JS-rendered, so `WebFetch` returns only the page title. Fetch the
   JSON mirror at `developer.apple.com/tutorials/data/documentation/...` instead.
+
+- **Reading a captured `conversation-logs` file** (`git show origin/conversation-logs:<file>`, or
+  the `Read` tool on a checked-out copy) — a small line-count `offset`/`limit` is not a safe
+  bound. A single JSONL line can be one large `tool_use`/`tool_result` running tens of thousands
+  of characters, so even a short window can overflow the 25,000-token read cap. Check line
+  lengths first (`awk '{print length}' <file> | sort -n | tail`) or condense the file with a
+  script before attempting a raw `Read`.
