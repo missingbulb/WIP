@@ -7,3 +7,4 @@ logic_manifest.GENERATED.dart merge=ours
 behavior_manifest.GENERATED.dart merge=ours
 screen_manifest.GENERATED.dart merge=ours
 saga_manifest.GENERATED.dart merge=ours
+.claudinite/shared/** linguist-vendored

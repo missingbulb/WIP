@@ -1,10 +1,17 @@
 {
   "packs": [
     "local/wip",
-    "basics",
-    "claudinite-lifecycle",
+    {
+      "id": "basics",
+      "version": "60823.1"
+    },
+    {
+      "id": "claudinite-lifecycle",
+      "version": "60823.1"
+    },
     {
       "id": "barriers",
+      "version": "60823.1",
       "via": [
         "claudinite-lifecycle"
       ],
@@ -14,12 +21,14 @@
     },
     {
       "id": "git-github",
+      "version": "60822.2",
       "via": [
         "basics"
       ]
     },
     {
       "id": "claude-code-web-users-support",
+      "version": "60823.1",
       "answers": {
         "store": "missingBulb/Shepherd"
       },
@@ -27,10 +36,17 @@
         "repo": "missingBulb/Shepherd"
       }
     },
-    "claudinite-growth",
-    "tidy-repo",
+    {
+      "id": "claudinite-growth",
+      "version": "60823.2"
+    },
+    {
+      "id": "tidy-repo",
+      "version": "60823.1"
+    },
     {
       "id": "executable-requirements",
+      "version": "60822.1",
       "answers": {
         "ui_testing": "Cross-platform (Flutter widget/golden tests) — the app targets iPad first with other platforms later, so UI requirements will be exercised via Flutter widget tests and golden-file rendering assertions once the platform choice is confirmed by tech research.",
         "requirements_source": "Wait until after market/tech research — dev/requirements/requirements.md stays unseeded until the deferred research pass (audience, actions, market, technology) informs what to spec. This adoption run intentionally stops before that research."
@@ -39,9 +55,13 @@
         "spec": "dev/requirements/requirements.md"
       }
     },
-    "spec-driven-product",
+    {
+      "id": "spec-driven-product",
+      "version": "60822.1"
+    },
     {
       "id": "product-wiki",
+      "version": "60823.3",
       "answers": {
         "product": "Claudinite (working name): an iPad app (other platforms later) for comedians to record, segment, manage, and review comedy bits — first use is working on new material, second use is tracking and managing existing material.",
         "users": "Working/touring standup comedians; open-mic and hobbyist comedians.",
@@ -49,35 +69,16 @@
       }
     }
   ],
-  "maintenance": {
-    "delivery": "auto-merge"
-  },
   "taskScheduler": {
-    "dailyHour": 4,
-    "weeklyDay": "Sun",
-    "monthlyDay": 1,
-    "endpoints": {
+    "agenticTaskInvocationEndpoints": {
       "default": {
         "url": "https://api.anthropic.com/v1/claude_code/routines/trig_01GeRxAuz3y78ZqQYTRjtz87/fire",
         "tokenSecret": "CCR_ROUTINE_TOKEN"
       }
-    }
+    },
+    "dailyHour": 4,
+    "weeklyDay": "Sun",
+    "monthlyDay": 1
   },
-  "claudinite": {
-    "updated": "2026-08-20T19:35:07.366Z",
-    "ref": "5c4103e12df164ac8efcdc9f84f6b961f150bbc6",
-    "engineVersion": "60820.1",
-    "packVersions": {
-      "basics": "60821.4",
-      "claudinite-lifecycle": "60821.2",
-      "barriers": "60820.1",
-      "git-github": "60820.2",
-      "claude-code-web-users-support": "60821.1",
-      "claudinite-growth": "60821.1",
-      "tidy-repo": "60820.1",
-      "executable-requirements": "60820.1",
-      "spec-driven-product": "60820.1",
-      "product-wiki": "60820.1"
-    }
-  }
+  "engineVersion": "60823.1"
 }
