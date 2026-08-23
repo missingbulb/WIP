@@ -1,0 +1,17 @@
+[
+  {
+    "id": "flutter/font-load-outside-setup-all",
+    "severity": "blocking",
+    "failureMessage": "loadProductFonts reads the font asset bundle exactly once per process; a second read inside a test body never completes and hangs that test until its ten-minute timeout instead of failing",
+    "scanFiles": "/\\.dart$/",
+    "scanTracked": true,
+    "matchLines": [
+      {
+        "match": "/\\bloadProductFonts\\s*\\(/",
+        "andWithinBlockOpenedBy": "/\\btest(Widgets)?\\s*\\(/",
+        "what": "loadProductFonts() invoked inside a test/testWidgets body: {match}",
+        "fix": "call loadProductFonts from setUpAll instead (setUpAll(loadProductFonts);), never from inside a test or testWidgets body"
+      }
+    ]
+  }
+]
