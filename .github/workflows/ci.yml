@@ -45,7 +45,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          # Wrangler needs it, and it is what the engines field declares.
+          node-version: 22
       - name: The API and the pipeline, against fakes
         working-directory: backend
         run: |
