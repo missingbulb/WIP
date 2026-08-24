@@ -45,3 +45,42 @@ canon instead, where every repo gets it.
   of characters, so even a short window can overflow the 25,000-token read cap. Check line
   lengths first (`awk '{print length}' <file> | sort -n | tail`) or condense the file with a
   script before attempting a raw `Read`.
+
+- **Fetching Cloudflare platform/product docs** (`developers.cloudflare.com/...`) for
+  product-wiki or architecture research — it's egress-blocked. Fetch the raw source instead from
+  the public mirror, `raw.githubusercontent.com/cloudflare/cloudflare-docs`, under
+  `production/src/content/docs/<path>.mdx` (shared fragments like instance-type tables live
+  under the sibling `.../partials/...` tree).
+
+- **A `mcp__github__*` call risking or hitting "result exceeds maximum allowed tokens"**
+  (`actions_list`, `pull_request_read` `get_files`, `search_issues`, `search_code`, …) — pass
+  `minimal_output: true` and a small `per_page` from the first attempt rather than a broad call.
+  If it still overflows, the error names the local file the full result was saved to; parse that
+  with a short script (`python3 -c '...json.load(...)'`) for just the fields needed — never
+  retry the same broad call, and never `Read` the saved file raw (it can overflow the read cap
+  too).
+
+- **Waiting on a GitHub Actions run or PR check** — resolve the wait through exactly one
+  mechanism (the `Monitor` tool's until-loop, or direct polling via `actions_get`/
+  `pull_request_read`), never both. A background `sleep` timer left running alongside direct
+  polling reports back later as a stale notification that has to be recognized and discarded,
+  and pairing a background timer with a *blocking* poll on its output routinely costs 3+
+  round-trips once the blocking poll hits the Bash tool's own 120s timeout.
+
+- **Finding where a Claudinite pack rule is enforced as a check** — read that pack's own
+  `declared-checks.json` directly rather than grepping `engine/checks/*.mjs` source; a declared
+  check is data-driven config, not keyword-searchable script text.
+
+- **Reporting a PR's or issue's current status** — query it directly (`pull_request_read`/
+  `issue_read`) before stating it. Text embedded in another item's `Context` field (e.g.
+  "(open)") is a snapshot from when that field was written and goes stale.
+
+- **Restoring a file after staging a destructive test edit** (e.g. `git add`-ing an injected
+  violation to confirm a check fires on it) — use `git checkout HEAD -- <path>` (or `git reset`
+  first). A bare `git checkout <path>` restores from the index, so a staged edit silently
+  survives the "restore".
+
+- **Delegating a scan across several files to background `Agent` sub-tasks** — wait for and read
+  each one's output before drafting your own analysis of the same file. Racing ahead with a
+  manual analysis of the same file in parallel wastes the sub-agent's entire run, and never
+  checking back on one at all means it produced nothing usable.
