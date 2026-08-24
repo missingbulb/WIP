@@ -1,0 +1,21 @@
+[
+  {
+    "id": "backend/bindings-only-in-index",
+    "severity": "blocking",
+    "failureMessage": "A Cloudflare binding reached outside src/index.js — every rule must stay a plain module provable against the fakes; only index.js may turn a binding into a port.",
+    "scanFiles": "/^backend\\/src\\/.*\\.js$/",
+    "excludeFiles": "/^backend\\/src\\/index\\.js$/",
+    "matchLines": [
+      {
+        "match": "/\\benv\\.[A-Za-z_]/",
+        "what": "Cloudflare binding accessed outside index.js: {match}",
+        "fix": "move this binding access into src/index.js and pass the resulting port down, or add a fake for it in test/support/fakes.js"
+      },
+      {
+        "match": "/from ['\"]cloudflare:workers['\"]/",
+        "what": "cloudflare:workers imported outside index.js: {match}",
+        "fix": "only src/index.js may import cloudflare:workers"
+      }
+    ]
+  }
+]
