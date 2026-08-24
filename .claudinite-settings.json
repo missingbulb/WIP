@@ -67,6 +67,10 @@
         "users": "Working/touring standup comedians; open-mic and hobbyist comedians.",
         "market": "Comedy bit recording/management apps for standups — no competitors named yet; the deferred first research pass will identify them."
       }
+    },
+    {
+      "id": "claudinite-tasks",
+      "version": "60824.5"
     }
   ],
   "taskScheduler": {
