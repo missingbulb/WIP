@@ -6,6 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'setlist_ui.dart';
 
+export 'src/font_assurance.dart' show expectFontsRenderRealGlyphs;
+
 /// Loads the families the product bundles into the test renderer.
 ///
 /// A test environment renders text in a glyph-less stub font by default, where
@@ -31,13 +33,33 @@ Future<void> loadProductFonts() async {
     await rootBundle.loadString('FontManifest.json'),
   ) as List<dynamic>;
 
+  if (manifest.isEmpty) {
+    throw StateError(
+      'FontManifest.json declares no families, so every render would use the '
+      'glyph-less fallback and any golden of it would be blind to copy.',
+    );
+  }
+
   for (final entry in manifest.cast<Map<String, dynamic>>()) {
-    final loader = FontLoader(entry['family'] as String);
+    final loader = FontLoader(_bareFamily(entry['family'] as String));
     for (final font in (entry['fonts'] as List<dynamic>).cast<Map<String, dynamic>>()) {
       loader.addFont(rootBundle.load(font['asset'] as String));
     }
     await loader.load();
   }
+}
+
+/// The family name a widget asks for, from the name the manifest lists it under.
+///
+/// A package's own fonts appear in its manifest unprefixed, but the same fonts
+/// seen from a package that *depends* on it are namespaced
+/// `packages/<package>/<family>`. A `TextStyle` names the bare family either
+/// way, so registering the manifest's name verbatim loads the bytes under a
+/// name nothing asks for: the text then renders in the glyph-less fallback, and
+/// a golden of it is blind to copy while still passing.
+String _bareFamily(String manifestFamily) {
+  final match = RegExp(r'^packages/[^/]+/(.+)$').firstMatch(manifestFamily);
+  return match?.group(1) ?? manifestFamily;
 }
 
 /// The sizes the product is specified at.
@@ -65,6 +87,12 @@ List<String> get stageSizesWidestLast {
   names.sort((a, b) => stageSizes[a]!.width.compareTo(stageSizes[b]!.width));
   return names;
 }
+
+/// The composed screen, as one capturable layer.
+///
+/// Every picture in the spec — whole screen or one element — is read out of
+/// this, so an element is always proved in the context the product shows it in.
+final stageRootKey = GlobalKey(debugLabel: 'stage-root');
 
 /// Renders the real stage screen at one of the specified sizes.
 ///
@@ -110,11 +138,13 @@ Future<void> pumpStage(
           child: SizedBox(
             width: bounds.width,
             height: bounds.height,
-            // Keyed by size so a second render in the same test builds a fresh
-            // tree rather than updating the last one: reused elements keep
-            // their old slots, and a card ends up laid out against a width the
-            // screen no longer has.
-            child: StageScreen(state: state),
+            // The boundary every picture in the spec is read out of: capturing
+            // an element needs a layer, and the composed screen is the only one
+            // the product actually draws.
+            child: RepaintBoundary(
+              key: stageRootKey,
+              child: StageScreen(state: state),
+            ),
           ),
         ),
       ),
