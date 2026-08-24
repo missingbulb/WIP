@@ -1,3 +1,6 @@
+import 'dart:ui' as ui;
+
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:setlist_ui/setlist_ui.dart';
@@ -18,9 +21,39 @@ Future<void> expectRegion(
 }) async {
   await pumpStage(tester, state, size: size);
   await expectLater(
-    find.byKey(region.key),
+    await _cropOfScreen(tester, regionBounds(tester, region)),
     matchesGoldenFile('screen/cases/$slug.$id.png'),
   );
+}
+
+/// The composed screen, with everything outside [rect] cut away.
+///
+/// Cropping here rather than pointing the matcher at the element itself:
+/// `matchesGoldenFile` given a `Finder` captures that finder's nearest
+/// *ancestor* `RepaintBoundary`, not the widget's own bounds. The screen has no
+/// boundary per element, so every such capture silently returned the whole
+/// screen — leaving seventeen leaves about seventeen different elements all
+/// proved by one identical picture.
+Future<ui.Image> _cropOfScreen(WidgetTester tester, Rect rect) async {
+  final boundary =
+      stageRootKey.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+  // Real image work never completes inside the fake-async test zone.
+  late ui.Image cropped;
+  await tester.runAsync(() async {
+    final whole = await boundary.toImage();
+    final recorder = ui.PictureRecorder();
+    Canvas(recorder).drawImageRect(
+      whole,
+      rect,
+      Offset.zero & rect.size,
+      Paint(),
+    );
+    cropped = await recorder
+        .endRecording()
+        .toImage(rect.width.round(), rect.height.round());
+    whole.dispose();
+  });
+  return cropped;
 }
 
 /// Renders the whole screen and compares it with its golden.
