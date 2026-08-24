@@ -2,10 +2,6 @@
   "$comment": "Requirement leaves specified but not yet executable. A burn-down list tracked by https://github.com/missingbulb/WIP/issues/6 — it only shrinks. A leaf listed here must carry the loud TBD marker on its line in requirements.md, and must have no case; the coverage gate enforces both directions.",
   "leaves": [
     {
-      "id": "5.1",
-      "reason": "The screen kind's renderer cannot flatten a platform-backed control, so no golden can show the standard switch; a lookalike would pass the golden while breaking the requirement. Needs a renderer that draws the control itself rather than embedding a platform one."
-    },
-    {
       "id": "6.5",
       "reason": "Needs real hardware: no fake can stand in for the audio session surviving a locked screen."
     },
