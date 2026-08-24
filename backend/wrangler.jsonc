@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "setlist-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-20",
+  // The pipeline reads whole audio chunks into memory before handing them to
+  // Workers AI, which the default 128 MB limit does not survive on an
+  // hour-long show.
+  "limits": { "cpu_ms": 300000 },
+  "r2_buckets": [{ "binding": "AUDIO", "bucket_name": "setlist-audio" }],
+  "d1_databases": [{ "binding": "DB", "database_name": "setlist", "database_id": "<set-at-deploy>" }],
+  "ai": { "binding": "AI" },
+  "workflows": [
+    { "binding": "PROCESS_SHOW", "name": "process-show", "class_name": "ProcessShow" }
+  ],
+  "vars": {
+    // Found empirically against real Workers AI behaviour: the input ceiling is
+    // undocumented (risk R3), so it is a value to turn rather than a constant.
+    "TRANSCRIBE_CHUNK_SECONDS": "60",
+    "TRANSCRIBE_CHUNK_OVERLAP_SECONDS": "2",
+    "MAX_SHOW_BYTES": "1073741824"
+  }
+}

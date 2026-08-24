@@ -1,0 +1,16 @@
+{
+  "name": "setlist-backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"test/**/*.test.js\"",
+    "typecheck": "wrangler types --check 2>/dev/null || true",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "aws4fetch": "^1.0.20"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
