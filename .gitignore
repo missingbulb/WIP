@@ -11,3 +11,6 @@ failures/
 # portable to another (risk R6).
 .dart_tool/
 build/
+
+# Backend dependencies.
+backend/node_modules/

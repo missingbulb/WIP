@@ -7,4 +7,8 @@ logic_manifest.GENERATED.dart merge=ours
 behavior_manifest.GENERATED.dart merge=ours
 screen_manifest.GENERATED.dart merge=ours
 saga_manifest.GENERATED.dart merge=ours
+
+# Generated from the Dart laugh detector; regenerating is how a conflict is
+# resolved, never by hand.
+detector-conformance.GENERATED.json merge=ours
 .claudinite/shared/** linguist-vendored

@@ -36,6 +36,23 @@ jobs:
       - name: Every requirement leaf is claimed exactly once
         run: node dev/requirements/gate/coverage-gate.mjs
 
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v5
+        with:
+          # Wrangler needs it, and it is what the engines field declares.
+          node-version: 22
+      - name: The API and the pipeline, against fakes
+        working-directory: backend
+        run: |
+          npm ci
+          npm test
+
   dart:
     name: Dart packages
     runs-on: ubuntu-latest
