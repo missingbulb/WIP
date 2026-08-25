@@ -84,3 +84,15 @@ canon instead, where every repo gets it.
   each one's output before drafting your own analysis of the same file. Racing ahead with a
   manual analysis of the same file in parallel wastes the sub-agent's entire run, and never
   checking back on one at all means it produced nothing usable.
+
+- **Running a Flutter/Dart suite command here** — `cd` into that package's own directory as part
+  of the same command, never assuming an earlier edit or suite run (in the same or a prior Bash
+  call) left the shell positioned there. A bare `Error: No pubspec.yaml file found` means the cwd
+  assumption was wrong, not that the suite ran and failed — a see-it-fail check read off that exit
+  code is worthless until the cwd is confirmed and the command redone.
+
+- **Writing or testing Node code for `backend/`** — check what Node version
+  `.github/workflows/ci.yml`'s `setup-node` step actually pins for that job before relying on
+  version-gated runtime behavior (e.g. `node --test`'s own file-glob expansion needs Node ≥22).
+  The agent sandbox's Node version can be newer than what CI runs, so a local pass proves nothing
+  about whether the same code passes there.

@@ -6,6 +6,8 @@ nothing writes no row; this is the log of what happened to the pack, never a log
 
 | Date | Task | Change |
 |---|---|---|
+| 2026-08-25 | `growth-extract` | Added: **Running a Flutter/Dart suite command here** — `cd` into the package directory as part of the same command; a bare "No pubspec.yaml" exit is a cwd error, not a test result. |
+| 2026-08-25 | `growth-extract` | Added: **Writing or testing Node code for `backend/`** — check CI's pinned `node-version` before relying on version-gated runtime behavior; the sandbox's Node version can be newer. |
 | 2026-08-24 | `growth-extract` | Added: **Fetching Cloudflare platform/product docs** — use the `raw.githubusercontent.com/cloudflare/cloudflare-docs` mirror, egress-blocked otherwise. |
 | 2026-08-24 | `growth-extract` | Added: **A `mcp__github__*` call hitting the token cap** — `minimal_output`/`per_page` upfront, parse the saved-output file on overflow instead of retrying. |
 | 2026-08-24 | `growth-extract` | Added: **Waiting on a GitHub Actions run or PR check** — one wait mechanism, never a background `sleep` timer alongside direct polling. |
