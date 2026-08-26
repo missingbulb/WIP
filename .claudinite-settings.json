@@ -1,6 +1,7 @@
 {
   "packs": [
     "local/wip",
+    "local/backend",
     {
       "id": "basics",
       "version": "60824.1"
