@@ -6,5 +6,4 @@
 @shared/packs/executable-requirements/RULES.md
 @shared/packs/product-wiki/RULES.md
 @shared/packs/spec-driven-product/RULES.md
-@shared/packs/tidy-repo/RULES.md
 @local/packs/wip/RULES.md
