@@ -6,6 +6,9 @@ nothing writes no row; this is the log of what happened to the pack, never a log
 
 | Date | Task | Change |
 |---|---|---|
+| 2026-08-30 | `rule-revalidation` | Corrected: **A `mcp__github__*` call risking or hitting the token cap** — none of `actions_list`, `pull_request_read`, `search_issues`, `search_code` carry a `minimal_output` parameter (confirmed against their live schemas); the real reducers are `perPage`/`per_page` and, where offered, a `fields` array. |
+| 2026-08-30 | `rule-revalidation` | Corrected: **Naming a new fleet-wide secret, endpoint id, or routine id** — `.claudinite-checks.json` was renamed to `.claudinite-settings.json` (confirmed: the old name is absent from this repo, and `settings-file-names.mjs` documents the rename), and the `CCR_*` convention now lives in `checks/helpers/repo-context.mjs`, not the no-longer-existing `scheduler/resolve-dispatch.mjs`. |
+| 2026-08-30 | `rule-revalidation` | Corrected: **Editing `.claudinite-checks.json` or another hand-maintained JSON config from a script** — same rename, retitled to `.claudinite-settings.json`. |
 | 2026-08-25 | `growth-extract` | Added: **Running a Flutter/Dart suite command here** — `cd` into the package directory as part of the same command; a bare "No pubspec.yaml" exit is a cwd error, not a test result. |
 | 2026-08-25 | `growth-extract` | Added: **Writing or testing Node code for `backend/`** — check CI's pinned `node-version` before relying on version-gated runtime behavior; the sandbox's Node version can be newer. |
 | 2026-08-24 | `growth-extract` | Added: **Fetching Cloudflare platform/product docs** — use the `raw.githubusercontent.com/cloudflare/cloudflare-docs` mirror, egress-blocked otherwise. |

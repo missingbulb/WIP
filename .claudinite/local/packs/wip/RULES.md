@@ -19,12 +19,12 @@ canon instead, where every repo gets it.
   fake-async test zone the future never completes, and the case hangs rather than failing.
 
 - **Naming a new fleet-wide secret, endpoint id, or routine id** (queue/scheduler wiring in
-  `.claudinite-checks.json` or `.github/workflows/`) — grep the Claudinite engine for the live
+  `.claudinite-settings.json` or `.github/workflows/`) — grep the Claudinite engine for the live
   convention first (e.g. `CCR_*` for scheduler token env vars, per
-  `.claudinite/shared/engine/scheduler/resolve-dispatch.mjs`) rather than inventing a
+  `.claudinite/shared/engine/checks/helpers/repo-context.mjs`) rather than inventing a
   plausible-sounding name; an invented name gets caught and corrected in review anyway.
 
-- **Editing `.claudinite-checks.json` or another hand-maintained JSON config from a script** —
+- **Editing `.claudinite-settings.json` or another hand-maintained JSON config from a script** —
   a `json.load`/`json.dumps` round-trip re-serializes the *whole* file (reordering/rewrapping
   keys it never meant to touch), turning a one-field addition into an oversized diff that has
   to be reverted and redone. Make a narrow, targeted text edit instead.
@@ -53,12 +53,13 @@ canon instead, where every repo gets it.
   under the sibling `.../partials/...` tree).
 
 - **A `mcp__github__*` call risking or hitting "result exceeds maximum allowed tokens"**
-  (`actions_list`, `pull_request_read` `get_files`, `search_issues`, `search_code`, …) — pass
-  `minimal_output: true` and a small `per_page` from the first attempt rather than a broad call.
-  If it still overflows, the error names the local file the full result was saved to; parse that
-  with a short script (`python3 -c '...json.load(...)'`) for just the fields needed — never
-  retry the same broad call, and never `Read` the saved file raw (it can overflow the read cap
-  too).
+  (`actions_list`, `pull_request_read` `get_files`, `search_issues`, `search_code`, …) — pass a
+  small `perPage`/`per_page` from the first attempt, and where the tool exposes a `fields` array
+  (`search_issues`, `search_code`, `list_issues`, …, but not `pull_request_read`), narrow that
+  too — there is no `minimal_output` parameter on any of these. If it still overflows, the error
+  names the local file the full result was saved to; parse that with a short script
+  (`python3 -c '...json.load(...)'`) for just the fields needed — never retry the same broad
+  call, and never `Read` the saved file raw (it can overflow the read cap too).
 
 - **Waiting on a GitHub Actions run or PR check** — resolve the wait through exactly one
   mechanism (the `Monitor` tool's until-loop, or direct polling via `actions_get`/
