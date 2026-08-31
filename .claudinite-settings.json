@@ -3,11 +3,11 @@
     "local/wip",
     {
       "id": "basics",
-      "version": "60830.6"
+      "version": "60831.3"
     },
     {
       "id": "claudinite-lifecycle",
-      "version": "60830.3"
+      "version": "60831.1"
     },
     {
       "id": "barriers",
@@ -70,7 +70,7 @@
     },
     {
       "id": "claudinite-tasks",
-      "version": "60831.3"
+      "version": "60831.5"
     }
   ],
   "taskScheduler": {
