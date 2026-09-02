@@ -10,19 +10,17 @@ canon instead, where every repo gets it.
 - **Verifying an app change in an agent session here** — install the Flutter SDK pinned in
   `.flutter-version` and run the suites: `dart test` in `packages/setlist_core`, `flutter test`
   in `packages/setlist_ui`, and `flutter test runner_test.dart` in `dev/requirements` (its cases
-  sit outside a `test/` folder, so the bare `flutter test` command finds nothing there). Goldens
-  render and compare headless on Linux with no display server, so a change is verified locally
-  rather than only by CI. What still cannot be verified anywhere but a device is the native
-  recorder under `app/ios` and `app/android` — neither toolchain exists here.
+  sit outside a `test/` folder, so the bare `flutter test` command finds nothing there). What
+  still cannot be verified anywhere but a device is the native recorder under `app/ios` and
+  `app/android` — neither toolchain exists here. (1)
 
 - **Doing real file or image I/O inside `testWidgets`** — wrap it in `tester.runAsync`. In the
   fake-async test zone the future never completes, and the case hangs rather than failing.
 
 - **Naming a new fleet-wide secret, endpoint id, or routine id** (queue/scheduler wiring in
   `.claudinite-checks.json` or `.github/workflows/`) — grep the Claudinite engine for the live
-  convention first (e.g. `CCR_*` for scheduler token env vars, per
-  `.claudinite/shared/engine/scheduler/resolve-dispatch.mjs`) rather than inventing a
-  plausible-sounding name; an invented name gets caught and corrected in review anyway.
+  convention first rather than inventing a plausible-sounding name; an invented name gets caught
+  and corrected in review anyway. (2)
 
 - **Editing `.claudinite-checks.json` or another hand-maintained JSON config from a script** —
   a `json.load`/`json.dumps` round-trip re-serializes the *whole* file (reordering/rewrapping
@@ -93,6 +91,5 @@ canon instead, where every repo gets it.
 
 - **Writing or testing Node code for `backend/`** — check what Node version
   `.github/workflows/ci.yml`'s `setup-node` step actually pins for that job before relying on
-  version-gated runtime behavior (e.g. `node --test`'s own file-glob expansion needs Node ≥22).
-  The agent sandbox's Node version can be newer than what CI runs, so a local pass proves nothing
-  about whether the same code passes there.
+  version-gated runtime behavior. The agent sandbox's Node version can be newer than what CI
+  runs, so a local pass proves nothing about whether the same code passes there. (3)
