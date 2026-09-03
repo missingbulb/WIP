@@ -12,3 +12,4 @@ saga_manifest.GENERATED.dart merge=ours
 # resolved, never by hand.
 detector-conformance.GENERATED.json merge=ours
 .claudinite/shared/** linguist-vendored
+claudinite-skills.GENERATED.md merge=ours
