@@ -3,21 +3,14 @@
     "local/wip",
     {
       "id": "basics",
-      "version": "60903.5"
+      "version": "60904.3",
+      "via": [
+        "claudinite-lifecycle"
+      ]
     },
     {
       "id": "claudinite-lifecycle",
-      "version": "60903.5"
-    },
-    {
-      "id": "barriers",
-      "version": "60823.1",
-      "via": [
-        "claudinite-lifecycle"
-      ],
-      "answers": {
-        "goals": "None yet — leave unset. The repo has no code yet; revisit once the app codebase has real folder structure (e.g. app code vs. product-wiki vs. requirements)."
-      }
+      "version": "60904.1"
     },
     {
       "id": "git-github",
@@ -38,7 +31,7 @@
     },
     {
       "id": "claudinite-growth",
-      "version": "60903.5"
+      "version": "60904.4"
     },
     {
       "id": "tidy-repo",
@@ -46,7 +39,7 @@
     },
     {
       "id": "executable-requirements",
-      "version": "60902.1",
+      "version": "60903.1",
       "answers": {
         "ui_testing": "Cross-platform (Flutter widget/golden tests) — the app targets iPad first with other platforms later, so UI requirements will be exercised via Flutter widget tests and golden-file rendering assertions once the platform choice is confirmed by tech research.",
         "requirements_source": "Wait until after market/tech research — dev/requirements/requirements.md stays unseeded until the deferred research pass (audience, actions, market, technology) informs what to spec. This adoption run intentionally stops before that research."
@@ -57,11 +50,11 @@
     },
     {
       "id": "spec-driven-product",
-      "version": "60902.1"
+      "version": "60903.1"
     },
     {
       "id": "product-wiki",
-      "version": "60903.2",
+      "version": "60904.1",
       "answers": {
         "product": "Claudinite (working name): an iPad app (other platforms later) for comedians to record, segment, manage, and review comedy bits — first use is working on new material, second use is tracking and managing existing material.",
         "users": "Working/touring standup comedians; open-mic and hobbyist comedians.",
@@ -70,7 +63,7 @@
     },
     {
       "id": "claudinite-tasks",
-      "version": "60903.4"
+      "version": "60904.2"
     }
   ],
   "taskScheduler": {
