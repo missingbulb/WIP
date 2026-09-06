@@ -18,7 +18,7 @@ canon instead, where every repo gets it.
   fake-async test zone the future never completes, and the case hangs rather than failing.
 
 - **Naming a new fleet-wide secret, endpoint id, or routine id** (queue/scheduler wiring in
-  `.claudinite-checks.json` or `.github/workflows/`) — grep the Claudinite engine for the live
+  `.claudinite-checks.json` or `.github/workflows/`) — grep the Claudinite mount for the live
   convention first rather than inventing a plausible-sounding name; an invented name gets caught
   and corrected in review anyway. (2)
 
@@ -51,12 +51,13 @@ canon instead, where every repo gets it.
   under the sibling `.../partials/...` tree).
 
 - **A `mcp__github__*` call risking or hitting "result exceeds maximum allowed tokens"**
-  (`actions_list`, `pull_request_read` `get_files`, `search_issues`, `search_code`, …) — pass
-  `minimal_output: true` and a small `per_page` from the first attempt rather than a broad call.
-  If it still overflows, the error names the local file the full result was saved to; parse that
-  with a short script (`python3 -c '...json.load(...)'`) for just the fields needed — never
-  retry the same broad call, and never `Read` the saved file raw (it can overflow the read cap
-  too).
+  (`actions_list`, `pull_request_read` `get_files`, `search_issues`, `search_code`, …) — pass a
+  small `perPage` from the first attempt, and narrow the response with a `fields` array on tools
+  that accept one (most `search_*`/`list_*` tools; `pull_request_read` and `actions_list` do not)
+  rather than making a broad call. If it still overflows, the error names the local file the full
+  result was saved to; parse that with a short script (`python3 -c '...json.load(...)'`) for just
+  the fields needed — never retry the same broad call, and never `Read` the saved file raw (it can
+  overflow the read cap too).
 
 - **Waiting on a GitHub Actions run or PR check** — resolve the wait through exactly one
   mechanism (the `Monitor` tool's until-loop, or direct polling via `actions_get`/

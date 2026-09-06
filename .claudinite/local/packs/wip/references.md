@@ -11,8 +11,8 @@ work.
   claim only if a kind again needs a real display, or CI regains a macOS lane.
 - **(RULES-2)** Wiring the queue's agent invocation endpoint (#28) needed a fleet-wide secret
   name; the live convention (`CCR_*`, e.g. `CCR_ROUTINE_TOKEN`) was found by grepping
-  `.claudinite/shared/engine/scheduler/resolve-dispatch.mjs` rather than guessed. Reaffirm by
-  checking that file still defines the convention before retiring the pointer.
+  `.claudinite/shared/packs/claudinite-tasks/resolve-dispatch.mjs` rather than guessed. Reaffirm
+  by checking that file still defines the convention before retiring the pointer.
 - **(RULES-3)** A sandbox Node newer than CI's pinned `setup-node` version masked a version-gated
   bug — `node --test`'s file-glob discovery needs Node ≥22 — until it broke in CI (#87); PR #89
   already made the CI pin config-enforced. Reaffirm by checking whether the sandbox's Node
