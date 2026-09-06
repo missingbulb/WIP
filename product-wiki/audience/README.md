@@ -83,11 +83,18 @@ verification by a human or an unblocked environment.
   [carylittlejohn.com](https://www.carylittlejohn.com/mike-birbiglias-wisdom-on-journals/),
   [Goodreads/Forte](https://www.goodreads.com/author_blog_posts/18909372-second-brain-case-study-using-digital-notes-for-stand-up-comedy)).
   A small iPhone-first indie app category (BitBinder, Joktor, Bits, Stand-Up Writer,
-  Standup Studio) validates the job but none advertises transcription, laugh
-  detection, or cross-show bit analytics
+  Standup Studio) validates the job
   ([BitBinder](https://apps.apple.com/hn/app/bitbinder/id6753145615),
   [Joktor](https://apps.apple.com/ca/app/joktor/id6520393668),
   [Bits](https://apps.apple.com/us/app/bits-stand-up-comedy-writing/id1481029465)).
+  **Corrected 2026-09-06**: this page previously said none of them advertises
+  transcription, laugh detection, or cross-show analytics — BitBinder's own listing
+  now claims "track joke success rates over time, analyze audience reactions by
+  material," and Jokely (a sibling app in this cluster, market page has the detail)
+  claims automatic transcription and laugh-metrics tracking. Whether that's real
+  audio analysis or manual tagging rebranded is unverified (see market page's open
+  questions) — the claim to carry here is narrower: the *category* still validates
+  the recording job, but "nobody in it analyzes" is no longer accurate.
 - **Trust with unreleased material.** Joke-theft fear is real and behavior-shaping —
   enforcement is social and severe ([daily.jstor.org](https://daily.jstor.org/policing-joke-theft),
   [cracked.com](https://www.cracked.com/article_29739_5-harsh-realities-of-joke-theft-a-stand-up-comics-view.html),
@@ -151,3 +158,9 @@ else. Likewise the "12,000 full-time US comedians" figure — no origin publishe
   the right device" open question is answered there (D1 — cross-platform, not
   iPad-only), so it's marked resolved rather than carried forward; no new
   research warranted a Key insights change.
+- **2026-09-06** — spot-check surfaced a superseded claim while researching the
+  market page: BitBinder's and Jokely's own listings now claim transcription/
+  laugh-metrics/audience-reaction analytics, contradicting this page's "none
+  advertises" line in the Job 2 bullet; corrected with a note rather than deleted
+  (full competitor detail lives on the market page, which owns it). No Key insights
+  change — this page's top-line understanding of the segment didn't move.
