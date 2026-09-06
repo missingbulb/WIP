@@ -1,5 +1,3 @@
-claudinite-rules.GENERATED.md merge=ours
-usage.GENERATED.json merge=ours
 
 # Regenerated from cases/ by the coverage gate; a hand-resolved conflict would
 # desync it from the tree it lists.
@@ -11,5 +9,3 @@ saga_manifest.GENERATED.dart merge=ours
 # Generated from the Dart laugh detector; regenerating is how a conflict is
 # resolved, never by hand.
 detector-conformance.GENERATED.json merge=ours
-.claudinite/shared/** linguist-vendored
-claudinite-skills.GENERATED.md merge=ours
