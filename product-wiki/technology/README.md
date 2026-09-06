@@ -131,6 +131,17 @@ carry publisher attribution without an opened page. Retrieved 2026-08-20.
 
 ## Text segmentation
 
+- **A large public stand-up dataset now exists**: StandUp4AI (EMNLP 2025 Findings) —
+  3,617 stand-up videos, 334 hours, 7 languages (English, French, Spanish, Italian,
+  Portuguese, Hungarian, Czech), ~3M words, ~130,000 audience-laughter labels
+  (auto-derived, with a manually-annotated validation subset); frames humor detection
+  as word-level sequence labeling over the transcript rather than clip classification;
+  dataset published on GitHub. It's the largest and most diverse resource of this kind
+  found to date — a candidate benchmark or fine-tuning set for this product's own
+  laughter-detection or bit-boundary work, not yet checked against
+  ([arxiv.org/abs/2505.18903](https://arxiv.org/abs/2505.18903),
+  [aclanthology.org/2025.findings-emnlp.919](https://aclanthology.org/2025.findings-emnlp.919/),
+  [github.com/Standup4AI/dataset](https://github.com/Standup4AI/dataset); snippet only).
 - **Comedy-specific precedent exists** (snippet only): TIC-TALK — BERTopic
   embedding segmentation at ~60 s granularity + Whisper-AT laughter at 0.8 s —
   essentially this product's pipeline as a research database
@@ -192,12 +203,15 @@ repo, `production` branch — `workers-ai-models/whisper*.json`,
 `containers/{pricing,instance-types}` partials; Apple documentation JSON for
 SoundAnalysis and Speech symbols (URLs inlined above). Snippet-only sources are
 marked inline beside each claim; developers.cloudflare.com and several publisher
-pages were egress-blocked in the research environment — page-level verification of
-snippet-only items needs a human or an unblocked environment. Kuznetsova &
-Strapparava, "Multimodal and Multilingual Laughter Detection in Stand-Up Comedy
-Videos" (LREC-COLING 2024) —
+pages were egress-blocked in the research environment (still blocked as of the
+2026-09-06 pass) — page-level verification of snippet-only items needs a human or an
+unblocked environment. Kuznetsova & Strapparava, "Multimodal and Multilingual
+Laughter Detection in Stand-Up Comedy Videos" (LREC-COLING 2024) —
 [aclanthology.org/2024.lrec-main.1037](https://aclanthology.org/2024.lrec-main.1037/),
-snippet only, added 2026-08-23.
+snippet only, added 2026-08-23. StandUp4AI (EMNLP 2025 Findings) —
+[arxiv.org/abs/2505.18903](https://arxiv.org/abs/2505.18903),
+[github.com/Standup4AI/dataset](https://github.com/Standup4AI/dataset), snippet
+only, added 2026-09-06.
 
 ## Open questions
 
@@ -217,6 +231,12 @@ snippet only, added 2026-08-23.
   load during capture is recording alone (transcription and laugh-detection both
   run after the set, server-side or in Detect). Still needs a device run (tracked
   as architecture risk R4).
+- Has anyone benchmarked a laughter-detection or bit-segmentation approach against
+  StandUp4AI (above) yet? It's the biggest public stand-up-specific dataset found so
+  far — worth checking before this product builds its own eval set from scratch.
+  Its laughter labels are mostly auto-derived (weak supervision), so the small
+  manually-annotated validation subset, not the full set, would be the actual ground
+  truth to trust.
 
 Answered by architecture decisions made since this page's last pass (D2, D7, D8 in
 `dev/design/architecture.md`), not by new research — removed rather than carried
@@ -246,3 +266,13 @@ calls it).
   detection underperforms ML on stand-up audio, sharpening architecture risk R1
   without new numbers (page fetch still blocked); rewrote the amplitude-
   thresholding Key insights bullet to carry that citation.
+- **2026-09-06** — second research pass (web mode; re-checked the Workers AI Whisper
+  size-ceiling question directly against the whisper-large-v3-turbo model doc and
+  the platform limits file in the cloudflare-docs source repo — still undocumented,
+  no change, open question stands as-is). Found and added StandUp4AI (EMNLP 2025
+  Findings), a new public stand-up-specific dataset an order of magnitude larger
+  than anything previously on this page (3,617 videos/334h/7 languages/~130k
+  laughter labels, GitHub); added a new open question on whether it's been
+  benchmarked yet. The Kuznetsova & Strapparava P/R/F1 question stayed
+  blocked — no new numbers surfaced. No Key insights change: StandUp4AI is a useful
+  resource but doesn't unseat any of the page's seven existing top-line findings.

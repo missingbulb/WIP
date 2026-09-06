@@ -11,6 +11,7 @@ competitors and adjacent alternatives Claudinite is measured against.
 - Comedy-specific apps are numerous, small, writing/setlist-first — and mostly free; paying for tools is unproven here.
 - Comedy educators themselves dispute laughs-per-minute as a performance metric.
 - Descript's pattern transfers directly: the transcript as the interface to the recording.
+- Jokely and BitBinder now advertise automatic transcription and joke-success analytics — "the writing apps just record" no longer holds.
 
 ## Direct competitors
 
@@ -36,15 +37,26 @@ page-level verification by a human or an unblocked environment.
 - **Jokely** ([App Store](https://apps.apple.com/us/app/jokely-stand-up-comedy/id6744562322),
   [jokelyapp.com](https://jokelyapp.com/)) — iOS + Android joke/set writing with a Stage
   Mode (clean on-stage view, timer, auto-records the performance) and "Post-Show
-  Reflection & Analytics… analyze audience reactions". Free download; whether the
-  "reaction analytics" analyzes audio or just stores it is unverified.
+  Reflection & Analytics… analyze audience reactions". Free download. **Updated
+  2026-09-06**: its own listing now claims more than passive storage — "automatically
+  transcribe, and spot timing or delivery issues quickly… track laugh-metrics over
+  time" — superseding the "unverified whether it analyzes or just stores" note below;
+  whether that's real audio ML or a rebrand of manual tagging is itself unverified
+  (App Store page fetch still blocked — snippet only, same as the rest of this
+  section).
 - **The Comedy Companion** ([App Store](https://apps.apple.com/us/app/the-comedy-companion/id1245335115),
   [AppBrain](https://www.appbrain.com/app/the-comedy-companion/com.comedycompanion)) —
   iOS + Android; jokes → setlists → performance tracking with audio recording of shows;
   free. A review notes clunky navigation. Its React Native codebase is public
   ([github.com/dereksweet/ComedyCompanion](https://github.com/dereksweet/ComedyCompanion)).
+- **BitBinder** ([App Store](https://apps.apple.com/hn/app/bitbinder/id6753145615)) —
+  by comedian Taylor Drew; "100% local, no sign-in, no tracking" (the audience page's
+  data-custody citation). **Updated 2026-09-06**: its listing also now claims
+  post-set analysis, not just capture — "review recordings with precise notes, track
+  joke success rates over time, analyze audience reactions by material" — the same
+  supersession as Jokely's, snippet-only and unverified.
 - **Writing-first indie cluster** — Comedy OS, Standup Studio, Standup Writer, Bits
-  ([thebits.club](https://www.thebits.club/)), Jokebook, Joktor, BitBinder, Show Your
+  ([thebits.club](https://www.thebits.club/)), Jokebook, Joktor, Show Your
   Bits, JokeStack ([jokestack.com](https://www.jokestack.com/)), UpMic
   ([upmic.app](https://upmic.app/en)), Stand-Up Writer ([stand.app](https://stand.app/en)),
   Set Lists Pro, Crush: setlist/joke management, not recording analysis. Several App
@@ -54,12 +66,15 @@ page-level verification by a human or an unblocked environment.
   [tightfive.overpass.co.uk](https://tightfive.overpass.co.uk/)); LaughLab
   ([laughlab.app](https://laughlab.app/en-CA)) is comedy education; "Joke Journal" exists
   only as an AI joke *generator* (Jokify); Punch-Line App is a collaborative
-  joke-voting community; Stand-Up Sitdown, ComicMind, Comedy Gym and Bit Tracker —
-  nothing citable found.
-- **The open niche** (inference across the snippets above, needs page-level
-  verification): the LPM tools are upload-based post-hoc; the writing-first apps record
-  but don't analyze; nobody found combines live recording, on-device laugh detection
-  and bit segmentation on iPad.
+  joke-voting community; The Humor Index scores *sitcom scripts* by AI, not live sets —
+  a different product category; Stand-Up Sitdown, ComicMind, Comedy Gym and Bit
+  Tracker — nothing citable found.
+- **The open niche narrows, doesn't close** (inference across the snippets above,
+  needs page-level verification): the LPM tools are still upload-based post-hoc, and
+  Jokely/BitBinder's own marketing now claims post-set analysis rather than pure
+  capture — but nothing found claims *live, on-device* laugh detection, and nothing
+  targets iPad specifically. The gap this product would fill is narrower than the
+  2026-08-20 pass found it, not gone.
 
 ## Adjacent / substitute tools
 
@@ -97,15 +112,17 @@ page-level verification by a human or an unblocked environment.
 ## Sources
 
 All sources below were reachable only as search snippets (domain-wide egress block on
-page fetches in the research environment, 2026-08-20); claims are attributed to the
-named publisher and need page-level verification by a human or an unblocked
-environment.
+page fetches in the research environment, 2026-08-20; still blocked as of the
+2026-09-06 pass); claims are attributed to the named publisher and need page-level
+verification by a human or an unblocked environment.
 
 - StandApp Comedy — https://standappcomedy.com/
 - Comedy Metric — https://comedymetric.app/
 - Comedy Evaluator Pro — https://www.comedyevaluatorpro.com/ and https://www.comedyevaluatorpro.com/203/smartphone-secrets-for-comedians/
 - Jokely — https://apps.apple.com/us/app/jokely-stand-up-comedy/id6744562322 , https://jokelyapp.com/
 - The Comedy Companion — https://apps.apple.com/us/app/the-comedy-companion/id1245335115 , https://www.appbrain.com/app/the-comedy-companion/com.comedycompanion , https://github.com/dereksweet/ComedyCompanion
+- BitBinder — https://apps.apple.com/hn/app/bitbinder/id6753145615 (also seen listed as https://apps.apple.com/dk/app/the-bitbinder/id6756085897 — same developer/description across storefronts, not confirmed whether same listing or a relaunch)
+- The Humor Index — https://www.thehumorindex.com/ , https://www.thehumorindex.com/methodology/
 - Tight Five Comedy Timer — https://apps.apple.com/app/tight-five-comedy-timer/id6759069567 , https://tightfive.overpass.co.uk/
 - LaughLab — https://laughlab.app/en-CA
 - Jokify: AI Joke Journal — https://apps.apple.com/us/app/jokify-ai-joke-journal/id6478407991
@@ -122,8 +139,15 @@ environment.
 
 - StandApp Comedy page-level teardown (needs unblocked environment or a human):
   pricing, platform, whether bit-splitting is automatic, traction.
-- Comedy Metric: is its LPM automatic laugh detection or self-reported?
-- Do Jokely / Standup Studio actually analyze recorded audio, or just store it?
+- Comedy Metric: is its LPM automatic laugh detection or self-reported? (still open —
+  no page-level detail surfaced this pass either.)
+- Standup Studio: its own copy reads as manual rating/notes ("add private notes and
+  rate your performance") rather than automated audio analysis — narrower than
+  Jokely/BitBinder's claims, but still snippet-only and worth a page-level check.
+- Jokely's "automatically transcribe… track laugh-metrics over time" and BitBinder's
+  "analyze audience reactions by material" are both marketing copy off a blocked App
+  Store page — do either actually run ASR/audio ML, or is this a rebrand of manual
+  tagging? Needs the page itself (human or unblocked environment).
 - Willingness to pay: direct comedian testimony (e.g. r/Standup — unreachable in the
   blocked environment) on paying for tools vs. defaulting to Voice Memos.
 - Is anyone serving the iPad-first "device on the stool / back of the room" recording
@@ -141,3 +165,14 @@ environment.
   incumbent workflow, adjacent songwriter/Descript patterns, and pricing reality;
   rewrote Key insights; replaced the seed open questions with the teardown questions
   the pass surfaced.
+- **2026-09-06** — second research pass (web mode; WebSearch snippets only — page
+  fetches domain-wide blocked, same as the first pass): Jokely's and BitBinder's own
+  App Store listings now claim automatic transcription and joke-success/audience-
+  reaction analytics, not just recording — superseded the "record but don't analyze"
+  characterization of the writing-first cluster with a corrected note on each
+  competitor and softened "the open niche" bullet accordingly (the gap narrows, not
+  closes: nothing claims live, on-device, or iPad-specific); checked Standup Studio
+  too (reads as manual rating, not automated analysis); ruled out The Humor Index as
+  a competitor (scores sitcom scripts, not live sets); added one Key insight; left
+  the rest of the header as-is (no other top-line finding changed); Comedy Metric's
+  and StandApp's teardown questions stay open — nothing new surfaced.
