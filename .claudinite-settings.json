@@ -60,6 +60,38 @@
     {
       "id": "claudinite-tasks",
       "version": "60907.2"
+    },
+    {
+      "id": "android",
+      "version": "60903.1"
+    },
+    {
+      "id": "ios",
+      "version": "60906.1"
+    },
+    {
+      "id": "flutter",
+      "version": "60906.1"
+    },
+    {
+      "id": "node",
+      "version": "60906.2",
+      "config": {
+        "dirs": [
+          "backend"
+        ]
+      }
+    },
+    {
+      "id": "cloudflare-workers",
+      "version": "60906.1"
+    }
+  ],
+  "accept": [
+    {
+      "rule": "node/btoa-atob-on-text",
+      "path": "backend/src/api/identity.js",
+      "reason": "base64url() only ever btoa()s a string built from String.fromCharCode(...bytes) over a Uint8Array, so every code unit is already 0-255 — the Latin1-overflow failure this rule warns about cannot occur here."
     }
   ],
   "taskScheduler": {

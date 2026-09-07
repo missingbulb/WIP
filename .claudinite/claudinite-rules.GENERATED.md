@@ -3,7 +3,11 @@
 @shared/packs/claude-code-web-users-support/RULES.md
 @shared/packs/claudinite-growth/RULES.md
 @shared/packs/claudinite-lifecycle/RULES.md
+@shared/packs/cloudflare-workers/RULES.md
 @shared/packs/executable-requirements/RULES.md
+@shared/packs/flutter/RULES.md
+@shared/packs/ios/RULES.md
+@shared/packs/node/RULES.md
 @shared/packs/product-wiki/RULES.md
 @shared/packs/spec-driven-product/RULES.md
 @local/packs/wip/RULES.md
