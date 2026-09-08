@@ -3,18 +3,18 @@
     "local/wip",
     {
       "id": "basics",
-      "version": "60906.13",
+      "version": "60908.1",
       "via": [
         "claudinite-lifecycle"
       ]
     },
     {
       "id": "claudinite-lifecycle",
-      "version": "60907.1"
+      "version": "60907.2"
     },
     {
       "id": "git-github",
-      "version": "60906.4",
+      "version": "60907.1",
       "via": [
         "basics"
       ]
@@ -31,7 +31,7 @@
     },
     {
       "id": "claudinite-growth",
-      "version": "60907.2"
+      "version": "60907.3"
     },
     {
       "id": "executable-requirements",
@@ -50,7 +50,7 @@
     },
     {
       "id": "product-wiki",
-      "version": "60906.1",
+      "version": "60907.1",
       "answers": {
         "product": "Claudinite (working name): an iPad app (other platforms later) for comedians to record, segment, manage, and review comedy bits — first use is working on new material, second use is tracking and managing existing material.",
         "users": "Working/touring standup comedians; open-mic and hobbyist comedians.",
@@ -59,7 +59,7 @@
     },
     {
       "id": "claudinite-tasks",
-      "version": "60907.2"
+      "version": "60907.3"
     }
   ],
   "taskScheduler": {
