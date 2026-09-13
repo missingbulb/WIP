@@ -11,6 +11,7 @@ competitors and adjacent alternatives Claudinite is measured against.
 - Comedy-specific apps are numerous, small, writing/setlist-first — and mostly free; paying for tools is unproven here.
 - Comedy educators themselves dispute laughs-per-minute as a performance metric.
 - Descript's pattern transfers directly: the transcript as the interface to the recording.
+- One writing-first indie app (BitBinder) now markets audience-reaction and joke-success analytics, not just setlists.
 
 ## Direct competitors
 
@@ -36,19 +37,35 @@ page-level verification by a human or an unblocked environment.
 - **Jokely** ([App Store](https://apps.apple.com/us/app/jokely-stand-up-comedy/id6744562322),
   [jokelyapp.com](https://jokelyapp.com/)) — iOS + Android joke/set writing with a Stage
   Mode (clean on-stage view, timer, auto-records the performance) and "Post-Show
-  Reflection & Analytics… analyze audience reactions". Free download; whether the
-  "reaction analytics" analyzes audio or just stores it is unverified.
+  Reflection & Analytics… analyze audience reactions". Free download. **Now confirmed**
+  (per its own marketing, snippet only): the analytics are automatic, not just storage —
+  "record rehearsals, automatically transcribe and spot timing or delivery issues quickly."
+  A real, if narrow, precedent for automated post-set analysis in this category.
 - **The Comedy Companion** ([App Store](https://apps.apple.com/us/app/the-comedy-companion/id1245335115),
   [AppBrain](https://www.appbrain.com/app/the-comedy-companion/com.comedycompanion)) —
   iOS + Android; jokes → setlists → performance tracking with audio recording of shows;
   free. A review notes clunky navigation. Its React Native codebase is public
   ([github.com/dereksweet/ComedyCompanion](https://github.com/dereksweet/ComedyCompanion)).
 - **Writing-first indie cluster** — Comedy OS, Standup Studio, Standup Writer, Bits
-  ([thebits.club](https://www.thebits.club/)), Jokebook, Joktor, BitBinder, Show Your
+  ([thebits.club](https://www.thebits.club/)), Jokebook, Joktor, Show Your
   Bits, JokeStack ([jokestack.com](https://www.jokestack.com/)), UpMic
   ([upmic.app](https://upmic.app/en)), Stand-Up Writer ([stand.app](https://stand.app/en)),
   Set Lists Pro, Crush: setlist/joke management, not recording analysis. Several App
   Store IDs suggest 2024–2025 launches — indies are actively re-entering the category.
+  **Standup Studio confirmed** (per its own marketing, snippet only) as recording +
+  playback for manual review only, no automated analysis — fits this category exactly
+  ([App Store](https://apps.apple.com/fi/app/standup-studio/id6744249349)).
+- **BitBinder has moved out of this category.** Previously listed here as pure
+  setlist/joke management; its App Store listing now (checked this pass, previously
+  checked 2026-08-20 for its "100% local" claim only) describes on-device recording
+  plus "track joke success rates over time, analyze audience reactions by material" and
+  an AI "Roast Mode" added in a v9.0 update
+  ([App Store](https://apps.apple.com/dk/app/the-bitbinder/id6756085897)). Whether
+  "analyze audience reactions" is automated audio/laugh detection or the user's own
+  timestamped notes ("review recordings with precise notes… track which jokes work")
+  is unverified from the snippet — the listing's own wording ("precise notes") reads
+  closer to manual tagging than ML detection, but this is the most direct competitive
+  signal found yet against the open-niche claim below.
 - **Name checks that came up empty or different**: Tight Five is a practice
   *timer* app (£4.99 one-time, club-light simulation —
   [tightfive.overpass.co.uk](https://tightfive.overpass.co.uk/)); LaughLab
@@ -57,9 +74,12 @@ page-level verification by a human or an unblocked environment.
   joke-voting community; Stand-Up Sitdown, ComicMind, Comedy Gym and Bit Tracker —
   nothing citable found.
 - **The open niche** (inference across the snippets above, needs page-level
-  verification): the LPM tools are upload-based post-hoc; the writing-first apps record
-  but don't analyze; nobody found combines live recording, on-device laugh detection
-  and bit segmentation on iPad.
+  verification): the LPM tools are upload-based post-hoc; nobody found combines live
+  recording, on-device laugh detection and bit segmentation on iPad. The writing-first
+  apps mostly record without analyzing, but this is no longer uniform — Jokely markets
+  automatic post-set transcription/analysis and BitBinder markets audience-reaction and
+  joke-success analysis (see above; BitBinder's mechanism is unverified) — so "the
+  writing-first apps don't analyze" is now the weaker part of this claim, not a given.
 
 ## Adjacent / substitute tools
 
@@ -97,9 +117,10 @@ page-level verification by a human or an unblocked environment.
 ## Sources
 
 All sources below were reachable only as search snippets (domain-wide egress block on
-page fetches in the research environment, 2026-08-20); claims are attributed to the
-named publisher and need page-level verification by a human or an unblocked
-environment.
+page fetches in the research environment, confirmed still in force 2026-09-13 —
+standappcomedy.com and aclanthology.org both returned `EGRESS_BLOCKED` on direct
+fetch this pass); claims are attributed to the named publisher and need page-level
+verification by a human or an unblocked environment.
 
 - StandApp Comedy — https://standappcomedy.com/
 - Comedy Metric — https://comedymetric.app/
@@ -117,13 +138,18 @@ environment.
 - Songwriter capture apps — https://songfancy.com/5-awesome-recording-apps-and-programs-for-beginning-songwriters/ , https://dubnote.com/blog/best-voice-memo-apps-for-musicians , https://getspitnotes.com/blog/best-apps-for-recording-lyrics-and-melodies/
 - Descript / Otter — https://www.descript.com/blog/article/how-to-use-descript , https://otter.ai/blog/descript-alternatives
 - Against LPM — https://www.realfirststeps.com/13528/stand-up-comedy-laughs-per-minute/
+- BitBinder — https://apps.apple.com/dk/app/the-bitbinder/id6756085897
+- Standup Studio — https://apps.apple.com/fi/app/standup-studio/id6744249349
 
 ## Open questions
 
 - StandApp Comedy page-level teardown (needs unblocked environment or a human):
   pricing, platform, whether bit-splitting is automatic, traction.
 - Comedy Metric: is its LPM automatic laugh detection or self-reported?
-- Do Jokely / Standup Studio actually analyze recorded audio, or just store it?
+- BitBinder's "analyze audience reactions by material" / "track joke success rates" —
+  automated audio/laugh detection, or the user's own timestamped notes? Its own wording
+  ("precise notes") suggests manual, but this needs the actual app or a page-level
+  fetch to confirm; it decides how much the "open niche" claim above still holds.
 - Willingness to pay: direct comedian testimony (e.g. r/Standup — unreachable in the
   blocked environment) on paying for tools vs. defaulting to Voice Memos.
 - Is anyone serving the iPad-first "device on the stool / back of the room" recording
@@ -131,6 +157,11 @@ environment.
   recording) create a constraint?
 - Comedy Evaluator Pro's method (manual button-press scoring vs. automatic) — decides
   whether automatic laugh detection is actually novel in this niche.
+
+Answered this pass, not carried forward: whether Jokely / Standup Studio actually
+analyze recorded audio or just store it — Jokely's own marketing now confirms
+automatic post-set transcription/analysis; Standup Studio confirmed as
+record-and-playback only, no automated analysis (see Direct competitors above).
 
 ## Growth log
 
@@ -141,3 +172,13 @@ environment.
   incumbent workflow, adjacent songwriter/Descript patterns, and pricing reality;
   rewrote Key insights; replaced the seed open questions with the teardown questions
   the pass surfaced.
+- **2026-09-13** — answered this page's open question on Jokely/Standup Studio:
+  Jokely's own marketing now confirms automatic post-set transcription/analysis (not
+  just storage); Standup Studio confirmed as record-and-playback only. Moved BitBinder
+  out of the "setlist management, not recording analysis" indie-cluster bucket — its
+  listing (checked against its 2026-08-20 "100% local" citation) now markets
+  audience-reaction and joke-success analytics via a v9.0 update, mechanism (automated
+  vs. manual notes) unverified and left as a new open question; softened the
+  "writing-first apps don't analyze" half of the open-niche claim accordingly. Spot-
+  checked page-fetch access (still `EGRESS_BLOCKED` for standappcomedy.com and
+  aclanthology.org) — no page-level teardowns possible this pass either.
